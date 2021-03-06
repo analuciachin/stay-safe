@@ -40,12 +40,14 @@ app.use(express.static("public"));
 
 const appointmentsRoutes = require("./routes/appointments");
 const profilesRoutes = require("./routes/profiles");
+const loginRoutes = require("./routes/login");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 
 app.use("/api/appointments", appointmentsRoutes(db));
 app.use("/api/profiles", profilesRoutes(db));
+app.use("/api/login", loginRoutes(db));
 
 // Note: mount other resources here, using the same pattern above
 
