@@ -3,12 +3,13 @@ const router = express();
 
 module.exports = (db) => {
   router.post("/", (req, res) => {
-    const nurse_username = req.body.username || null;
-    const patient_email = req.body.email || null;
+    const nurse_username = req.body.username;
+    const patient_email = req.body.email;
     const password = req.body.password;
 
     console.log("nurse_username ", nurse_username);
     console.log("patient_email ", patient_email);
+    console.log("password ", password);
     if (!nurse_username && patient_email) {
       return db
         .query(`SELECT * FROM patients WHERE email = $1;`, [patient_email])
