@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 export default function Login({ userSelected }) {
@@ -7,6 +8,8 @@ export default function Login({ userSelected }) {
     username: "",
     password: "",
   });
+
+  const [userLogged, setUserLogged] = useState(null);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -22,8 +25,15 @@ export default function Login({ userSelected }) {
       })
       .then(function (response) {
         console.log("response", response);
+        const user = response.data.user;
+        setUserLogged(user);
+      })
+      .catch(function (error) {
+        console.log(error);
       });
   };
+
+  useEffect(() => console.log("userLogged ", userLogged), [userLogged]);
 
   return (
     <>
@@ -69,6 +79,9 @@ export default function Login({ userSelected }) {
           />
           <input type="submit" value="Login" />
         </form>
+      )}
+      {userSelected === "Patient" && (
+        <Link to={{ pathname: "/signup" }}>Sign up</Link>
       )}
     </>
   );

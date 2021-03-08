@@ -20,8 +20,11 @@ module.exports = (db) => {
           } else {
             const patient_password = data.rows[0].password;
             if (patient_password == password) {
-              const patient = data.rows;
-              res.json({ patient });
+              const user = {};
+              user.id = data.rows[0].id;
+              user.email = data.rows[0].email;
+              user.type = "patient";
+              res.json({ user });
             } else {
               res.status(401).send("Invalid password");
             }
@@ -40,8 +43,12 @@ module.exports = (db) => {
           } else {
             const nurse_password = data.rows[0].password;
             if (nurse_password == password) {
-              const nurse = data.rows;
-              res.json({ nurse });
+              const user = {};
+              user.id = data.rows[0].id;
+              user.username = data.rows[0].username;
+              user.type = "nurse";
+              console.log(user);
+              res.json({ user });
             } else {
               res.status(401).send("Invalid password");
             }
