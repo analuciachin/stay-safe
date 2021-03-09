@@ -136,6 +136,35 @@ module.exports = (db) => {
       });
   });
 
+  // router.post("/:id/appointments", (req, res) => {
+  //   const appt_date = req.body.appt_date;
+  //   const nurse_id = req.body.nurse_id;
+  //   const patient_id = req.params.id;
+  //   const is_high_priority = req.body.is_high_priority;
+
+  //   if (appt_date === "" || nurse_id === "" || patient_id === "") {
+  //     res.status(401).send("There are empty fields in the form.");
+  //     return;
+  //   }
+
+  //   return db
+  //     .query(
+  //       `
+  //       INSERT INTO appointments (appt_date, nurse_id, patient_id, is_high_priority)
+  //       VALUES ($1, $2, $3, $4)
+  //       RETURNING *;
+  //     `,
+  //       [appt_date, nurse_id, patient_id, is_high_priority]
+  //     )
+  //     .then((data) => {
+  //       const appointment = data.rows;
+  //       res.json({ appointment });
+  //     })
+  //     .catch((err) => {
+  //       res.status(500).json({ error: err.message });
+  //     });
+  // });
+
   router.post("/:id/appointments", (req, res) => {
     const appt_date = req.body.appt_date;
     const nurse_id = req.body.nurse_id;
@@ -147,18 +176,39 @@ module.exports = (db) => {
       return;
     }
 
-    return db
-      .query(
-        `
-        INSERT INTO appointments (appt_date, nurse_id, patient_id, is_high_priority)
-        VALUES ($1, $2, $3, $4)
-        RETURNING *;
-      `,
-        [appt_date, nurse_id, patient_id, is_high_priority]
-      )
+    db.query(
+      `SELECT appts.* 
+      FROM appointments as appts 
+      LEFT JOIN patients 
+      ON appts.patient_id = patients.id 
+      WHERE appts.patient_id = $1`,
+      [req.params.id]
+    )
       .then((data) => {
-        const appointment = data.rows;
-        res.json({ appointment });
+        //console.log("data ", data);
+        if (data.rows.length > 0) {
+          res.json({
+            success: false,
+            message: "user already have an appointment booked",
+          });
+        } else {
+          return db
+            .query(
+              `
+            INSERT INTO appointments (appt_date, nurse_id, patient_id, is_high_priority)
+            VALUES ($1, $2, $3, $4)
+            RETURNING *;
+          `,
+              [appt_date, nurse_id, patient_id, is_high_priority]
+            )
+            .then((data) => {
+              const appointment = data.rows;
+              res.json({ success: true, appointment });
+            })
+            .catch((err) => {
+              res.status(500).json({ error: err.message });
+            });
+        }
       })
       .catch((err) => {
         res.status(500).json({ error: err.message });
