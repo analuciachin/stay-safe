@@ -181,7 +181,8 @@ module.exports = (db) => {
       FROM appointments as appts 
       LEFT JOIN patients 
       ON appts.patient_id = patients.id 
-      WHERE appts.patient_id = $1`,
+      WHERE appts.patient_id = $1
+      `,
       [req.params.id]
     )
       .then((data) => {
@@ -198,7 +199,7 @@ module.exports = (db) => {
             INSERT INTO appointments (appt_date, nurse_id, patient_id, is_high_priority)
             VALUES ($1, $2, $3, $4)
             RETURNING *;
-          `,
+            `,
               [appt_date, nurse_id, patient_id, is_high_priority]
             )
             .then((data) => {
