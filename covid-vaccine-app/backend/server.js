@@ -39,15 +39,15 @@ app.use(express.static("public"));
 // Note: Feel free to replace the example routes below with your own
 
 const appointmentsRoutes = require("./routes/appointments");
-const profilesRoutes = require("./routes/profiles");
-const loginRoutes = require("./routes/login");
+const patientsRoutes = require("./routes/patients");
+const loginRoute = require("./routes/login");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 
 app.use("/api/appointments", appointmentsRoutes(db));
-app.use("/api/profiles", profilesRoutes(db));
-app.use("/api/login", loginRoutes(db));
+app.use("/api/patients", patientsRoutes(db));
+app.use("/api/login", loginRoute(db));
 
 // Note: mount other resources here, using the same pattern above
 
