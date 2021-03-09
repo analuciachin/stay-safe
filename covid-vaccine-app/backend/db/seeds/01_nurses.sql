@@ -1,3 +1,3 @@
-INSERT INTO nurses (username, password) VALUES ('lily', '123');
-INSERT INTO nurses (username, password) VALUES ('kira', '123');
-INSERT INTO nurses (username, password) VALUES ('tom', '123');
+INSERT INTO nurses (username, password, first_name, last_name) VALUES ('lily', '123', 'Lillian', 'Miller');
+INSERT INTO nurses (username, password, first_name, last_name) VALUES ('caty', '123', 'Catherine', 'Davis');
+INSERT INTO nurses (username, password, first_name, last_name) VALUES ('tom', '123', 'Thomas', 'Moore');

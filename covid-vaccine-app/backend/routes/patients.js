@@ -114,5 +114,23 @@ module.exports = (db) => {
       });
   });
 
+  router.get("/:id/appointments", (req, res) => {
+    db.query(
+      `SELECT appointments.* 
+      FROM appointments 
+      LEFT JOIN patients ON appointments.patient_id = patients.id
+      LEFT JOIN nurses ON appointments.nurse_id = nurses.id
+      WHERE patients.id = $1;`,
+      [req.params.id]
+    )
+      .then((data) => {
+        const appointments = data.rows;
+        res.json({ appointments });
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
+  });
+
   return router;
 };
