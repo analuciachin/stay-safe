@@ -13,8 +13,10 @@
 
 ## Patient Profile
 
-/profiles
-/profiles/:id
+/patients
+/patients/:id
+/patients/:id/appointments
+/patients/:patientId/appointments/:appointmentId
 
 # Server facing routes (Fetching / Updating information)
 
@@ -33,7 +35,11 @@
 
 ## Patient Profile
 
-/api/profiles (POST) - create a new profile
-/api/profiles/:id (PUT) - updated profile #id
-/api/profiles/:id (DELETE) - delete profile #id
-/api/profiles/:id (GET) - retrieve a profile #id
+/api/patients (POST) - create a new profile
+/api/patients/:id (PUT) - updated profile #id
+/api/patients/:id (DELETE) - delete profile #id
+/api/patients/:id (GET) - retrieve a profile #id
+/api/patients/:id/appointments (GET) - retrieve patient's appt
+/api/patients/:id/appointments (POST) - create a new appt for patient #id
+/api/patients/:patientId/appointments/:appointmentId (UPDATE) - update an appt for patient #id
+/api/patients/:patientId/appointments/:appointmentId (DELETE) - delete an appt for patient #id
