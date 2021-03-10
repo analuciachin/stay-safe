@@ -7,11 +7,14 @@ export default function PatientAppt({ user }) {
 
   useEffect(() => {
     if (user.type === "patient") {
-      axios.get(`/api/patients/${user.id}/appointments`).then((response) => {
-        console.log("response api ", response.data.appointments);
-        const appointment = response.data.appointments;
-        setAppointment(appointment);
-      });
+      axios
+        .get(`/api/patients/${user.id}/appointments`)
+        .then((response) => {
+          console.log("response api ", response.data.appointments);
+          const appointment = response.data.appointments;
+          setAppointment(appointment);
+        })
+        .catch((error) => console.log(error));
     }
   }, []);
 
@@ -28,6 +31,19 @@ export default function PatientAppt({ user }) {
       sqlDate.lastIndexOf(".")
     );
     return apptTime;
+  };
+
+  const deleteAppt = (apptId) => {
+    axios
+      .delete(`/api/patients/${user.id}/appointments/${apptId}`)
+      .then((response) => {
+        console.log(response.data);
+        const message = response.data.message;
+        if (message === "Appointment deleted successfuly!") {
+          setAppointment(null);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -51,9 +67,14 @@ export default function PatientAppt({ user }) {
             Is this a high priority appointment?{" "}
             {appointment[0].is_high_priority ? "Yes" : "No"}{" "}
           </p>
+          <button>Update</button>
+          <button onClick={() => deleteAppt(appointment[0].id)}>Delete</button>
         </div>
       ) : (
-        <h3>Please book an appointment to get your COVID-19 shoot.</h3>
+        <div>
+          <h3>Please book an appointment to get your COVID-19 vaccine.</h3>
+          <button>Book your appointment</button>
+        </div>
       )}
     </>
   );
