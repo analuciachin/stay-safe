@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import Login from "../Login/Login";
 
-export default function UserOptions() {
+export default function UserOptions({ getUserLogged }) {
   const users = ["Nurse", "Patient"];
 
   const [userSelected, setUserSelected] = useState(null);
@@ -20,7 +20,7 @@ export default function UserOptions() {
           </li>
         ))}
       </ul>
-      <Login userSelected={userSelected} />
+      <Login userSelected={userSelected} getUserLogged={getUserLogged} />
     </>
   );
 }
