@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
-export default function Login({ userSelected }) {
+export default function Login({ userSelected, getUserLogged }) {
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     username: "",
     password: "",
   });
 
-  const [userLogged, setUserLogged] = useState(null);
+  let history = useHistory();
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -24,16 +24,16 @@ export default function Login({ userSelected }) {
         password: loginInfo.password,
       })
       .then(function (response) {
-        console.log("response", response);
         const user = response.data.user;
-        setUserLogged(user);
+        console.log("user ", user);
+        getUserLogged(user);
+
+        history.push(`/patients/${user.id}/appointments`);
       })
       .catch(function (error) {
         console.log(error);
       });
   };
-
-  useEffect(() => console.log("userLogged ", userLogged), [userLogged]);
 
   return (
     <>
