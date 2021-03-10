@@ -17,14 +17,30 @@ export default function PatientAppt({ user }) {
 
   useEffect(() => console.log(appointment), [appointment]);
 
+  const getDate = (sqlDate) => {
+    const apptDate = sqlDate.split("T")[0];
+    return apptDate;
+  };
+
+  const getTime = (sqlDate) => {
+    const apptTime = sqlDate.substring(
+      sqlDate.lastIndexOf("T") + 1,
+      sqlDate.lastIndexOf(".")
+    );
+    return apptTime;
+  };
+
   return (
     <>
       {appointment && appointment.length > 0 ? (
         <div>
+          <h3>Your appointment information</h3>
           <p>
-            Appointment Date: <span>{appointment[0].appt_date}</span>
+            Date: <span>{getDate(appointment[0].appt_date)}</span>
           </p>
-
+          <p>
+            Time: <span>{getTime(appointment[0].appt_date)}</span>
+          </p>
           <p>
             Nurse:{" "}
             <span>
@@ -37,7 +53,7 @@ export default function PatientAppt({ user }) {
           </p>
         </div>
       ) : (
-        <h3>Please book an appointment to get your COVID-19 shot.</h3>
+        <h3>Please book an appointment to get your COVID-19 shoot.</h3>
       )}
     </>
   );
