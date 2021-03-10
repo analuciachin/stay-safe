@@ -3,14 +3,20 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
 export default function PatientAppt({ user }) {
-  console.log(user);
-  // useEffect(() => {
-  //   if (user.type === "patient") {
-  //     console.log("patient");
-  //   } else console.log("not a patient");
+  const [appointment, setAppointment] = useState(null);
 
-  //   //axios.get("/api/patients/:id/appointments");
-  // });
+  useEffect(() => {
+    if (user.type === "patient") {
+      axios.get(`/api/patients/${user.id}/appointments`).then((response) => {
+        console.log("response api ", response.data.appointments);
+        const appointment = response.data.appointments;
+        setAppointment(appointment);
+      });
+    }
+  }, []);
+
+  useEffect(() => console.log(appointment), [appointment]);
+
   return (
     <>
       <p>PatientAppt component</p>
