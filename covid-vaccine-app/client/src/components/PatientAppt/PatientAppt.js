@@ -73,7 +73,23 @@ export default function PatientAppt({ user }) {
       ) : (
         <div>
           <h3>Please book an appointment to get your COVID-19 vaccine.</h3>
-          <button>Book your appointment</button>
+          <form>
+            <label for="appt-time">Date/Time:</label>
+
+            <input
+              type="datetime-local"
+              id="meeting-time"
+              name="meeting-time"
+              value="2018-06-12T19:30"
+              min="2018-06-07T00:00"
+              max="2018-06-14T00:00"
+            />
+
+            <label for="nurse">Nurse:</label>
+            <ul>
+              <li></li>
+            </ul>
+          </form>
         </div>
       )}
     </>
