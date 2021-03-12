@@ -11,6 +11,10 @@ export default function PatientAppt({ user, nurses }) {
     is_high_risk: "",
   });
 
+  const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
+  const [errorBookAppt, setErrorBookAppt] = useState(null);
+  const [isApptBooked, setIsApptBooked] = useState(null);
+
   useEffect(() => {
     if (user.type === "patient") {
       axios
@@ -24,7 +28,7 @@ export default function PatientAppt({ user, nurses }) {
     }
   }, []);
 
-  useEffect(() => console.log(bookApptForm), [bookApptForm]);
+  useEffect(() => console.log(isApptTimeAvailable), [isApptTimeAvailable]);
 
   const getDate = (sqlDate) => {
     const apptDate = sqlDate.split("T")[0];
@@ -37,6 +41,17 @@ export default function PatientAppt({ user, nurses }) {
       sqlDate.lastIndexOf(".")
     );
     return apptTime;
+  };
+
+  const convert24hTo12h = (time) => {
+    const apptTime = getTime(time);
+    const hours = apptTime.substring(0, 2);
+    console.log(hours);
+    if (hours < 12) {
+      return hours + ":00 AM";
+    } else {
+      return hours - 12 + ":00 PM";
+    }
   };
 
   const deleteAppt = (apptId) => {
@@ -52,6 +67,63 @@ export default function PatientAppt({ user, nurses }) {
       .catch((error) => console.log(error));
   };
 
+  const submitHandler = (event) => {
+    event.preventDefault();
+    isNurseAvailable(bookApptForm.nurse_id, () => {
+      bookAppt(user.id);
+    });
+  };
+
+  const bookAppt = (patientId) => {
+    axios
+      .post(`/api/patients/${patientId}/appointments`, {
+        appt_date: bookApptForm.date + "T" + bookApptForm.time,
+        nurse_id: bookApptForm.nurse_id,
+        is_high_priority: bookApptForm.is_high_risk,
+      })
+      .then((response) => {
+        if (response.data.appointment.length > 0) {
+          setIsApptBooked(true);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const isNurseAvailable = (nurseId, callback) => {
+    axios
+      .get(`/api/nurses/${nurseId}/appointments`)
+      .then((response) => {
+        const nurseSchedule = response.data.appointments;
+        let isDateTimeAvailable;
+        if (nurseSchedule.length > 0) {
+          for (let schedule of nurseSchedule) {
+            const apptDate = getDate(schedule.appt_date);
+            const apptTime = getTime(schedule.appt_date);
+            if (
+              apptDate === bookApptForm.date &&
+              apptTime === bookApptForm.time
+            ) {
+              console.log("appt time NOT available");
+              setIsApptTimeAvailable(false);
+              isDateTimeAvailable = false;
+              break;
+            } else {
+              console.log("appt time available");
+              isDateTimeAvailable = true;
+            }
+          }
+        }
+        return isDateTimeAvailable;
+      })
+      .then((response) => {
+        if (response) {
+          setErrorBookAppt(false);
+          callback();
+        } else setErrorBookAppt(true);
+      })
+      .catch((error) => console.log(error));
+  };
+
   return (
     <>
       {appointment && appointment.length > 0 ? (
@@ -61,7 +133,7 @@ export default function PatientAppt({ user, nurses }) {
             Date: <span>{getDate(appointment[0].appt_date)}</span>
           </p>
           <p>
-            Time: <span>{getTime(appointment[0].appt_date)}</span>
+            Time: <span>{convert24hTo12h(appointment[0].appt_date)}</span>
           </p>
           <p>
             Nurse:{" "}
@@ -79,7 +151,13 @@ export default function PatientAppt({ user, nurses }) {
       ) : (
         <div>
           <h3>Please book an appointment to get your COVID-19 vaccine.</h3>
-          <form>
+          {errorBookAppt && (
+            <h3>
+              Nurse is not available at this date/time. Please change the
+              date/time of your appointment.
+            </h3>
+          )}
+          <form onSubmit={submitHandler}>
             <label htmlFor="appt-time">Date: </label>
             <input
               type="date"
@@ -144,6 +222,8 @@ export default function PatientAppt({ user, nurses }) {
 
             <input type="submit" value="Book an appointment" />
           </form>
+
+          {isApptBooked && <h3>Your appointment was booked successfuly!</h3>}
         </div>
       )}
     </>

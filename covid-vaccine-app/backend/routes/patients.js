@@ -121,7 +121,7 @@ module.exports = (db) => {
       appts.is_high_priority, 
       nurses.first_name as nurse_first_name, 
       nurses.last_name as nurse_last_name
-      FROM appointments as appts
+      FROM appointments AS appts
       LEFT JOIN patients ON appts.patient_id = patients.id
       LEFT JOIN nurses ON appts.nurse_id = nurses.id
       WHERE patients.id = $1;`,
@@ -178,7 +178,7 @@ module.exports = (db) => {
 
     db.query(
       `SELECT appts.* 
-      FROM appointments as appts 
+      FROM appointments AS appts 
       LEFT JOIN patients 
       ON appts.patient_id = patients.id 
       WHERE appts.patient_id = $1
