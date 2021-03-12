@@ -13,5 +13,20 @@ module.exports = (db) => {
       });
   });
 
+  router.get("/:id/appointments", (req, res) => {
+    db.query(
+      `SELECT *
+        FROM appointments WHERE nurse_id = $1`,
+      [req.params.id]
+    )
+      .then((data) => {
+        const appointments = data.rows;
+        res.json({ appointments });
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
+  });
+
   return router;
 };
