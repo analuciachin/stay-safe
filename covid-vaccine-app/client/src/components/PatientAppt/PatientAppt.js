@@ -52,6 +52,21 @@ export default function PatientAppt({ user, nurses }) {
       .catch((error) => console.log(error));
   };
 
+  const submitHandler = (event) => {
+    event.preventDefault();
+    bookAppt(user.id);
+  };
+
+  const bookAppt = (patientId) => {
+    axios
+      .post(`/api/patients/${patientId}/appointments`, {
+        appt_date: bookApptForm.date + "T" + bookApptForm.time,
+        nurse_id: bookApptForm.nurse_id,
+        is_high_priority: bookApptForm.is_high_risk,
+      })
+      .then((response) => console.log(response));
+  };
+
   return (
     <>
       {appointment && appointment.length > 0 ? (
@@ -79,7 +94,7 @@ export default function PatientAppt({ user, nurses }) {
       ) : (
         <div>
           <h3>Please book an appointment to get your COVID-19 vaccine.</h3>
-          <form>
+          <form onSubmit={submitHandler}>
             <label htmlFor="appt-time">Date: </label>
             <input
               type="date"
