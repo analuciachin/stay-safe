@@ -10,9 +10,10 @@ export default function PatientAppt({ user, nurses }) {
     nurse_id: "",
     is_high_risk: "",
   });
-  //const [nurseSchedule, setNurseSchedule] = useState(null);
+
   const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
+  const [isApptBooked, setIsApptBooked] = useState(null);
 
   useEffect(() => {
     if (user.type === "patient") {
@@ -50,7 +51,6 @@ export default function PatientAppt({ user, nurses }) {
         const message = response.data.message;
         if (message === "Appointment deleted successfuly!") {
           setAppointment(null);
-          //setNurseSchedule(null);
         }
       })
       .catch((error) => console.log(error));
@@ -70,7 +70,12 @@ export default function PatientAppt({ user, nurses }) {
         nurse_id: bookApptForm.nurse_id,
         is_high_priority: bookApptForm.is_high_risk,
       })
-      .then((response) => console.log(response));
+      .then((response) => {
+        if (response.data.appointment.length > 0) {
+          setIsApptBooked(true);
+        }
+      })
+      .catch((error) => console.log(error));
   };
 
   const isNurseAvailable = (nurseId, callback) => {
@@ -79,7 +84,6 @@ export default function PatientAppt({ user, nurses }) {
       .then((response) => {
         const nurseSchedule = response.data.appointments;
         let isDateTimeAvailable;
-        //setNurseSchedule(nurseSchedule);
         if (nurseSchedule.length > 0) {
           for (let schedule of nurseSchedule) {
             const apptDate = getDate(schedule.appt_date);
@@ -207,6 +211,8 @@ export default function PatientAppt({ user, nurses }) {
 
             <input type="submit" value="Book an appointment" />
           </form>
+
+          {isApptBooked && <h3>Your appointment was booked successfuly!</h3>}
         </div>
       )}
     </>
