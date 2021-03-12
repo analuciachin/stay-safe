@@ -43,6 +43,17 @@ export default function PatientAppt({ user, nurses }) {
     return apptTime;
   };
 
+  const convert24hTo12h = (time) => {
+    const apptTime = getTime(time);
+    const hours = apptTime.substring(0, 2);
+    console.log(hours);
+    if (hours < 12) {
+      return hours + ":00 AM";
+    } else {
+      return hours - 12 + ":00 PM";
+    }
+  };
+
   const deleteAppt = (apptId) => {
     axios
       .delete(`/api/patients/${user.id}/appointments/${apptId}`)
@@ -122,7 +133,7 @@ export default function PatientAppt({ user, nurses }) {
             Date: <span>{getDate(appointment[0].appt_date)}</span>
           </p>
           <p>
-            Time: <span>{getTime(appointment[0].appt_date)}</span>
+            Time: <span>{convert24hTo12h(appointment[0].appt_date)}</span>
           </p>
           <p>
             Nurse:{" "}
