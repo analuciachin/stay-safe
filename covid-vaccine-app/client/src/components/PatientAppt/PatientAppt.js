@@ -10,6 +10,9 @@ export default function PatientAppt({ user, nurses }) {
     nurse_id: "",
     is_high_risk: "",
   });
+  //const [nurseSchedule, setNurseSchedule] = useState(null);
+  const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
+  const [errorBookAppt, setErrorBookAppt] = useState(null);
 
   useEffect(() => {
     if (user.type === "patient") {
@@ -24,7 +27,7 @@ export default function PatientAppt({ user, nurses }) {
     }
   }, []);
 
-  useEffect(() => console.log(bookApptForm), [bookApptForm]);
+  useEffect(() => console.log(isApptTimeAvailable), [isApptTimeAvailable]);
 
   const getDate = (sqlDate) => {
     const apptDate = sqlDate.split("T")[0];
@@ -47,6 +50,7 @@ export default function PatientAppt({ user, nurses }) {
         const message = response.data.message;
         if (message === "Appointment deleted successfuly!") {
           setAppointment(null);
+          //setNurseSchedule(null);
         }
       })
       .catch((error) => console.log(error));
@@ -54,7 +58,9 @@ export default function PatientAppt({ user, nurses }) {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    bookAppt(user.id);
+    isNurseAvailable(bookApptForm.nurse_id, () => {
+      bookAppt(user.id);
+    });
   };
 
   const bookAppt = (patientId) => {
@@ -65,6 +71,42 @@ export default function PatientAppt({ user, nurses }) {
         is_high_priority: bookApptForm.is_high_risk,
       })
       .then((response) => console.log(response));
+  };
+
+  const isNurseAvailable = (nurseId, callback) => {
+    axios
+      .get(`/api/nurses/${nurseId}/appointments`)
+      .then((response) => {
+        const nurseSchedule = response.data.appointments;
+        let isDateTimeAvailable;
+        //setNurseSchedule(nurseSchedule);
+        if (nurseSchedule.length > 0) {
+          for (let schedule of nurseSchedule) {
+            const apptDate = getDate(schedule.appt_date);
+            const apptTime = getTime(schedule.appt_date);
+            if (
+              apptDate === bookApptForm.date &&
+              apptTime === bookApptForm.time
+            ) {
+              console.log("appt time NOT available");
+              setIsApptTimeAvailable(false);
+              isDateTimeAvailable = false;
+              break;
+            } else {
+              console.log("appt time available");
+              isDateTimeAvailable = true;
+            }
+          }
+        }
+        return isDateTimeAvailable;
+      })
+      .then((response) => {
+        if (response) {
+          setErrorBookAppt(false);
+          callback();
+        } else setErrorBookAppt(true);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (
@@ -94,6 +136,12 @@ export default function PatientAppt({ user, nurses }) {
       ) : (
         <div>
           <h3>Please book an appointment to get your COVID-19 vaccine.</h3>
+          {errorBookAppt && (
+            <h3>
+              Nurse is not available at this date/time. Please change the
+              date/time of your appointment.
+            </h3>
+          )}
           <form onSubmit={submitHandler}>
             <label htmlFor="appt-time">Date: </label>
             <input
