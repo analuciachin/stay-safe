@@ -9,6 +9,7 @@ export default function PatientAppt({ user, nurses }) {
   const [appointment, setAppointment] = useState(null);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
   const [isApptBooked, setIsApptBooked] = useState(null);
+  const [isApptUpdated, setIsApptUpdated] = useState(null);
   const [isActionUpdate, setIsActionUpdate] = useState(false);
 
   const getErrorBookAppt = (error) => {
@@ -50,7 +51,7 @@ export default function PatientAppt({ user, nurses }) {
   const convert24hTo12h = (time) => {
     const apptTime = getTime(time);
     const hours = apptTime.substring(0, 2);
-    console.log(hours);
+    // console.log(hours);
     if (hours < 12) {
       return hours + ":00 AM";
     } else {
@@ -71,8 +72,12 @@ export default function PatientAppt({ user, nurses }) {
       .catch((error) => console.log(error));
   };
 
-  const updateAppt = (apptId) => {
+  const getIsActionUpdate = () => {
     setIsActionUpdate(true);
+  };
+
+  const getIsApptUpdated = (status) => {
+    setIsApptUpdated(status);
   };
 
   return (
@@ -96,19 +101,30 @@ export default function PatientAppt({ user, nurses }) {
             Is this a high priority appointment?{" "}
             {appointment[0].is_high_priority ? "Yes" : "No"}{" "}
           </p>
-          <button onClick={() => updateAppt(appointment[0].id)}>Update</button>
+          <button onClick={getIsActionUpdate}>Update</button>
           <button onClick={() => deleteAppt(appointment[0].id)}>Delete</button>
 
           {isActionUpdate && (
             <ApptForm
               user={user}
               nurses={nurses}
-              action="Book an appointment"
+              apptId={appointment[0].id}
+              action="Update"
               getErrorBookAppt={getErrorBookAppt}
               getIsApptBooked={getIsApptBooked}
               getDate={getDate}
               getTime={getTime}
+              isActionUpdate={isActionUpdate}
+              getIsApptUpdated={getIsApptUpdated}
+              getIsActionUpdate={getIsActionUpdate}
             />
+          )}
+          {isApptUpdated && <h3>Your appointment was updated successfuly!</h3>}
+          {errorBookAppt && (
+            <h3>
+              Nurse is not available at this date/time. Please change the
+              date/time of your appointment.
+            </h3>
           )}
         </div>
       ) : (
@@ -129,6 +145,9 @@ export default function PatientAppt({ user, nurses }) {
             getIsApptBooked={getIsApptBooked}
             getDate={getDate}
             getTime={getTime}
+            isActionUpdate={isActionUpdate}
+            getIsApptUpdated={getIsApptUpdated}
+            getIsActionUpdate={getIsActionUpdate}
           />
 
           {isApptBooked && <h3>Your appointment was booked successfuly!</h3>}

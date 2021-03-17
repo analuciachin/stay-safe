@@ -6,11 +6,15 @@ export default function ApptForm(props) {
   const {
     user,
     nurses,
+    apptId,
     action,
     getErrorBookAppt,
     getIsApptBooked,
     getDate,
     getTime,
+    isActionUpdate,
+    getIsApptUpdated,
+    getIsActionUpdate,
   } = props;
 
   const [bookApptForm, setBookApptForm] = useState({
@@ -22,9 +26,16 @@ export default function ApptForm(props) {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    isNurseAvailable(bookApptForm.nurse_id, () => {
-      bookAppt(user.id);
-    });
+    if (isActionUpdate) {
+      console.log("here");
+      isNurseAvailable(bookApptForm.nurse_id, () => {
+        updateAppt(apptId);
+      });
+    } else {
+      isNurseAvailable(bookApptForm.nurse_id, () => {
+        bookAppt(user.id);
+      });
+    }
   };
 
   const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
@@ -45,6 +56,8 @@ export default function ApptForm(props) {
   };
 
   const isNurseAvailable = (nurseId, callback) => {
+    getErrorBookAppt(null);
+    setIsApptTimeAvailable(true);
     axios
       .get(`/api/nurses/${nurseId}/appointments`)
       .then((response) => {
@@ -79,30 +92,56 @@ export default function ApptForm(props) {
       .catch((error) => console.log(error));
   };
 
+  const updateAppt = (apptId) => {
+    console.log("updateAppt");
+    getIsApptUpdated(false);
+    axios
+      .put(`/api/patients/${user.id}/appointments/${apptId}`, {
+        appt_date: bookApptForm.date + "T" + bookApptForm.time,
+        nurse_id: bookApptForm.nurse_id,
+        is_high_priority: bookApptForm.is_high_risk,
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          getIsApptUpdated(true);
+          getIsActionUpdate(false);
+        }
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const clearStatus = () => {
+    getIsApptUpdated(null);
+    getErrorBookAppt(null);
+    getIsApptBooked(null);
+  };
+
   return (
     <form onSubmit={submitHandler}>
       <label htmlFor="appt-time">Date: </label>
       <input
         type="date"
         value={bookApptForm.date}
-        onChange={(event) =>
+        onChange={(event) => {
           setBookApptForm({
             ...bookApptForm,
             date: event.target.value,
-          })
-        }
+          });
+          clearStatus();
+        }}
       />
 
       <label htmlFor="appt-time">Time: </label>
       <select
         htmlFor="time"
         value={bookApptForm.time}
-        onChange={(event) =>
+        onChange={(event) => {
           setBookApptForm({
             ...bookApptForm,
             time: event.target.value,
-          })
-        }
+          });
+          clearStatus();
+        }}
       >
         <option value="placeholder">Select an option</option>
         <option value="10:00:00">10:00am</option>
@@ -116,12 +155,13 @@ export default function ApptForm(props) {
       <select
         htmlFor="nurse"
         value={bookApptForm.nurse_id}
-        onChange={(event) =>
+        onChange={(event) => {
           setBookApptForm({
             ...bookApptForm,
             nurse_id: event.target.value,
-          })
-        }
+          });
+          clearStatus();
+        }}
       >
         Nurse:
         <option value="placeholder">Select an option</option>
@@ -135,12 +175,13 @@ export default function ApptForm(props) {
       <input
         type="text"
         value={bookApptForm.is_high_risk}
-        onChange={(event) =>
+        onChange={(event) => {
           setBookApptForm({
             ...bookApptForm,
             is_high_risk: event.target.value,
-          })
-        }
+          });
+          clearStatus();
+        }}
       />
 
       <input type="submit" value={action} />
