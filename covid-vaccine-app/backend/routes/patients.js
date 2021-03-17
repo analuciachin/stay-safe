@@ -243,8 +243,11 @@ module.exports = (db) => {
         [appt_date, nurse_id, patient_id, is_high_priority, appt_id]
       )
       .then((data) => {
-        const appointment = data.rows;
-        res.json({ appointment });
+        // const appointment = data.rows;
+        // res.json({ appointment });
+        res.status(200).json({
+          message: "Appointment updated successfuly!",
+        });
       })
       .catch((err) => {
         res.status(500).json({ error: err.message });

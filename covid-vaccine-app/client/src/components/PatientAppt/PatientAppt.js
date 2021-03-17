@@ -2,18 +2,23 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
+import "../ApptForm/ApptForm";
+import ApptForm from "../ApptForm/ApptForm";
+
 export default function PatientAppt({ user, nurses }) {
   const [appointment, setAppointment] = useState(null);
-  const [bookApptForm, setBookApptForm] = useState({
-    date: "",
-    time: "",
-    nurse_id: "",
-    is_high_risk: "",
-  });
-
-  const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
   const [isApptBooked, setIsApptBooked] = useState(null);
+  const [isApptUpdated, setIsApptUpdated] = useState(null);
+  const [isActionUpdate, setIsActionUpdate] = useState(false);
+
+  const getErrorBookAppt = (error) => {
+    setErrorBookAppt(error);
+  };
+
+  const getIsApptBooked = (isBooked) => {
+    setIsApptBooked(isBooked);
+  };
 
   useEffect(() => {
     if (user.type === "patient") {
@@ -28,7 +33,7 @@ export default function PatientAppt({ user, nurses }) {
     }
   }, []);
 
-  useEffect(() => console.log(isApptTimeAvailable), [isApptTimeAvailable]);
+  // useEffect(() => console.log(isApptTimeAvailable), [isApptTimeAvailable]);
 
   const getDate = (sqlDate) => {
     const apptDate = sqlDate.split("T")[0];
@@ -46,7 +51,7 @@ export default function PatientAppt({ user, nurses }) {
   const convert24hTo12h = (time) => {
     const apptTime = getTime(time);
     const hours = apptTime.substring(0, 2);
-    console.log(hours);
+    // console.log(hours);
     if (hours < 12) {
       return hours + ":00 AM";
     } else {
@@ -67,61 +72,12 @@ export default function PatientAppt({ user, nurses }) {
       .catch((error) => console.log(error));
   };
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-    isNurseAvailable(bookApptForm.nurse_id, () => {
-      bookAppt(user.id);
-    });
+  const getIsActionUpdate = () => {
+    setIsActionUpdate(true);
   };
 
-  const bookAppt = (patientId) => {
-    axios
-      .post(`/api/patients/${patientId}/appointments`, {
-        appt_date: bookApptForm.date + "T" + bookApptForm.time,
-        nurse_id: bookApptForm.nurse_id,
-        is_high_priority: bookApptForm.is_high_risk,
-      })
-      .then((response) => {
-        if (response.data.appointment.length > 0) {
-          setIsApptBooked(true);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const isNurseAvailable = (nurseId, callback) => {
-    axios
-      .get(`/api/nurses/${nurseId}/appointments`)
-      .then((response) => {
-        const nurseSchedule = response.data.appointments;
-        let isDateTimeAvailable;
-        if (nurseSchedule.length > 0) {
-          for (let schedule of nurseSchedule) {
-            const apptDate = getDate(schedule.appt_date);
-            const apptTime = getTime(schedule.appt_date);
-            if (
-              apptDate === bookApptForm.date &&
-              apptTime === bookApptForm.time
-            ) {
-              console.log("appt time NOT available");
-              setIsApptTimeAvailable(false);
-              isDateTimeAvailable = false;
-              break;
-            } else {
-              console.log("appt time available");
-              isDateTimeAvailable = true;
-            }
-          }
-        }
-        return isDateTimeAvailable;
-      })
-      .then((response) => {
-        if (response) {
-          setErrorBookAppt(false);
-          callback();
-        } else setErrorBookAppt(true);
-      })
-      .catch((error) => console.log(error));
+  const getIsApptUpdated = (status) => {
+    setIsApptUpdated(status);
   };
 
   return (
@@ -145,8 +101,31 @@ export default function PatientAppt({ user, nurses }) {
             Is this a high priority appointment?{" "}
             {appointment[0].is_high_priority ? "Yes" : "No"}{" "}
           </p>
-          <button>Update</button>
+          <button onClick={getIsActionUpdate}>Update</button>
           <button onClick={() => deleteAppt(appointment[0].id)}>Delete</button>
+
+          {isActionUpdate && (
+            <ApptForm
+              user={user}
+              nurses={nurses}
+              apptId={appointment[0].id}
+              action="Update"
+              getErrorBookAppt={getErrorBookAppt}
+              getIsApptBooked={getIsApptBooked}
+              getDate={getDate}
+              getTime={getTime}
+              isActionUpdate={isActionUpdate}
+              getIsApptUpdated={getIsApptUpdated}
+              getIsActionUpdate={getIsActionUpdate}
+            />
+          )}
+          {isApptUpdated && <h3>Your appointment was updated successfuly!</h3>}
+          {errorBookAppt && (
+            <h3>
+              Nurse is not available at this date/time. Please change the
+              date/time of your appointment.
+            </h3>
+          )}
         </div>
       ) : (
         <div>
@@ -157,71 +136,19 @@ export default function PatientAppt({ user, nurses }) {
               date/time of your appointment.
             </h3>
           )}
-          <form onSubmit={submitHandler}>
-            <label htmlFor="appt-time">Date: </label>
-            <input
-              type="date"
-              value={bookApptForm.date}
-              onChange={(event) =>
-                setBookApptForm({
-                  ...bookApptForm,
-                  date: event.target.value,
-                })
-              }
-            />
 
-            <label htmlFor="appt-time">Time: </label>
-            <select
-              htmlFor="time"
-              value={bookApptForm.time}
-              onChange={(event) =>
-                setBookApptForm({
-                  ...bookApptForm,
-                  time: event.target.value,
-                })
-              }
-            >
-              <option value="placeholder">Select an option</option>
-              <option value="10:00:00">10:00am</option>
-              <option value="11:00:00">11:00am</option>
-              <option value="13:00:00">1:00pm</option>
-              <option value="14:00:00">2:00pm</option>
-              <option value="15:00:00">3:00pm</option>
-              <option value="16:00:00">4:00pm</option>
-            </select>
-
-            <select
-              htmlFor="nurse"
-              value={bookApptForm.nurse_id}
-              onChange={(event) =>
-                setBookApptForm({
-                  ...bookApptForm,
-                  nurse_id: event.target.value,
-                })
-              }
-            >
-              Nurse:
-              <option value="placeholder">Select an option</option>
-              {nurses.map((nurse) => (
-                <option key={nurse.id} value={nurse.id}>
-                  {nurse.first_name} {nurse.last_name}
-                </option>
-              ))}
-            </select>
-            <label htmlFor="high-risk">High Risk</label>
-            <input
-              type="text"
-              value={bookApptForm.is_high_risk}
-              onChange={(event) =>
-                setBookApptForm({
-                  ...bookApptForm,
-                  is_high_risk: event.target.value,
-                })
-              }
-            />
-
-            <input type="submit" value="Book an appointment" />
-          </form>
+          <ApptForm
+            user={user}
+            nurses={nurses}
+            action="Book an appointment"
+            getErrorBookAppt={getErrorBookAppt}
+            getIsApptBooked={getIsApptBooked}
+            getDate={getDate}
+            getTime={getTime}
+            isActionUpdate={isActionUpdate}
+            getIsApptUpdated={getIsApptUpdated}
+            getIsActionUpdate={getIsActionUpdate}
+          />
 
           {isApptBooked && <h3>Your appointment was booked successfuly!</h3>}
         </div>
