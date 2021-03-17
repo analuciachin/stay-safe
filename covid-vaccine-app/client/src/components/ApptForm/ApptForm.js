@@ -28,8 +28,6 @@ export default function ApptForm(props) {
   };
 
   const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
-  // const [errorBookAppt, setErrorBookAppt] = useState(null);
-  // const [isApptBooked, setIsApptBooked] = useState(null);
 
   const bookAppt = (patientId) => {
     axios

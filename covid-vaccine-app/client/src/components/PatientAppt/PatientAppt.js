@@ -7,16 +7,9 @@ import ApptForm from "../ApptForm/ApptForm";
 
 export default function PatientAppt({ user, nurses }) {
   const [appointment, setAppointment] = useState(null);
-  // const [bookApptForm, setBookApptForm] = useState({
-  //   date: "",
-  //   time: "",
-  //   nurse_id: "",
-  //   is_high_risk: "",
-  // });
-
-  // const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
   const [isApptBooked, setIsApptBooked] = useState(null);
+  const [isActionUpdate, setIsActionUpdate] = useState(false);
 
   const getErrorBookAppt = (error) => {
     setErrorBookAppt(error);
@@ -78,6 +71,10 @@ export default function PatientAppt({ user, nurses }) {
       .catch((error) => console.log(error));
   };
 
+  const updateAppt = (apptId) => {
+    setIsActionUpdate(true);
+  };
+
   return (
     <>
       {appointment && appointment.length > 0 ? (
@@ -99,8 +96,20 @@ export default function PatientAppt({ user, nurses }) {
             Is this a high priority appointment?{" "}
             {appointment[0].is_high_priority ? "Yes" : "No"}{" "}
           </p>
-          <button>Update</button>
+          <button onClick={() => updateAppt(appointment[0].id)}>Update</button>
           <button onClick={() => deleteAppt(appointment[0].id)}>Delete</button>
+
+          {isActionUpdate && (
+            <ApptForm
+              user={user}
+              nurses={nurses}
+              action="Book an appointment"
+              getErrorBookAppt={getErrorBookAppt}
+              getIsApptBooked={getIsApptBooked}
+              getDate={getDate}
+              getTime={getTime}
+            />
+          )}
         </div>
       ) : (
         <div>
