@@ -2,18 +2,29 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
+import "../ApptForm/ApptForm";
+import ApptForm from "../ApptForm/ApptForm";
+
 export default function PatientAppt({ user, nurses }) {
   const [appointment, setAppointment] = useState(null);
-  const [bookApptForm, setBookApptForm] = useState({
-    date: "",
-    time: "",
-    nurse_id: "",
-    is_high_risk: "",
-  });
+  // const [bookApptForm, setBookApptForm] = useState({
+  //   date: "",
+  //   time: "",
+  //   nurse_id: "",
+  //   is_high_risk: "",
+  // });
 
-  const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
+  // const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
   const [isApptBooked, setIsApptBooked] = useState(null);
+
+  const getErrorBookAppt = (error) => {
+    setErrorBookAppt(error);
+  };
+
+  const getIsApptBooked = (isBooked) => {
+    setIsApptBooked(isBooked);
+  };
 
   useEffect(() => {
     if (user.type === "patient") {
@@ -28,7 +39,7 @@ export default function PatientAppt({ user, nurses }) {
     }
   }, []);
 
-  useEffect(() => console.log(isApptTimeAvailable), [isApptTimeAvailable]);
+  // useEffect(() => console.log(isApptTimeAvailable), [isApptTimeAvailable]);
 
   const getDate = (sqlDate) => {
     const apptDate = sqlDate.split("T")[0];
@@ -67,63 +78,6 @@ export default function PatientAppt({ user, nurses }) {
       .catch((error) => console.log(error));
   };
 
-  const submitHandler = (event) => {
-    event.preventDefault();
-    isNurseAvailable(bookApptForm.nurse_id, () => {
-      bookAppt(user.id);
-    });
-  };
-
-  const bookAppt = (patientId) => {
-    axios
-      .post(`/api/patients/${patientId}/appointments`, {
-        appt_date: bookApptForm.date + "T" + bookApptForm.time,
-        nurse_id: bookApptForm.nurse_id,
-        is_high_priority: bookApptForm.is_high_risk,
-      })
-      .then((response) => {
-        if (response.data.appointment.length > 0) {
-          setIsApptBooked(true);
-        }
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const isNurseAvailable = (nurseId, callback) => {
-    axios
-      .get(`/api/nurses/${nurseId}/appointments`)
-      .then((response) => {
-        const nurseSchedule = response.data.appointments;
-        let isDateTimeAvailable;
-        if (nurseSchedule.length > 0) {
-          for (let schedule of nurseSchedule) {
-            const apptDate = getDate(schedule.appt_date);
-            const apptTime = getTime(schedule.appt_date);
-            if (
-              apptDate === bookApptForm.date &&
-              apptTime === bookApptForm.time
-            ) {
-              console.log("appt time NOT available");
-              setIsApptTimeAvailable(false);
-              isDateTimeAvailable = false;
-              break;
-            } else {
-              console.log("appt time available");
-              isDateTimeAvailable = true;
-            }
-          }
-        }
-        return isDateTimeAvailable;
-      })
-      .then((response) => {
-        if (response) {
-          setErrorBookAppt(false);
-          callback();
-        } else setErrorBookAppt(true);
-      })
-      .catch((error) => console.log(error));
-  };
-
   return (
     <>
       {appointment && appointment.length > 0 ? (
@@ -157,7 +111,18 @@ export default function PatientAppt({ user, nurses }) {
               date/time of your appointment.
             </h3>
           )}
-          <form onSubmit={submitHandler}>
+
+          <ApptForm
+            user={user}
+            nurses={nurses}
+            action="Book an appointment"
+            getErrorBookAppt={getErrorBookAppt}
+            getIsApptBooked={getIsApptBooked}
+            getDate={getDate}
+            getTime={getTime}
+          />
+
+          {/* <form onSubmit={submitHandler}>
             <label htmlFor="appt-time">Date: </label>
             <input
               type="date"
@@ -221,7 +186,7 @@ export default function PatientAppt({ user, nurses }) {
             />
 
             <input type="submit" value="Book an appointment" />
-          </form>
+          </form> */}
 
           {isApptBooked && <h3>Your appointment was booked successfuly!</h3>}
         </div>
