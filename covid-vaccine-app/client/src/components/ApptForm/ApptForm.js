@@ -41,6 +41,7 @@ export default function ApptForm(props) {
   const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
 
   const bookAppt = (patientId) => {
+    console.log(bookApptForm.nurse_id);
     axios
       .post(`/api/patients/${patientId}/appointments`, {
         appt_date: bookApptForm.date + "T" + bookApptForm.time,
@@ -56,11 +57,13 @@ export default function ApptForm(props) {
   };
 
   const isNurseAvailable = (nurseId, callback) => {
-    getErrorBookAppt(null);
-    setIsApptTimeAvailable(true);
     axios
       .get(`/api/nurses/${nurseId}/appointments`)
       .then((response) => {
+        console.log("nurseId", nurseId);
+        console.log(response);
+        getErrorBookAppt(null);
+        setIsApptTimeAvailable(true);
         const nurseSchedule = response.data.appointments;
         let isDateTimeAvailable;
         if (nurseSchedule.length > 0) {
@@ -80,6 +83,8 @@ export default function ApptForm(props) {
               isDateTimeAvailable = true;
             }
           }
+        } else {
+          isDateTimeAvailable = true;
         }
         return isDateTimeAvailable;
       })
