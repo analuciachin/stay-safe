@@ -5,6 +5,7 @@ import axios from "axios";
 import UserOptions from "./components/UserOptions/UserOptions";
 import PatientAppt from "./components/PatientAppt/PatientAppt";
 import Signup from "./components/Signup/Signup";
+import PatientProfile from "./components/PatientProfile/PatientProfile";
 
 const App = () => {
   const [state, setState] = useState({ user: null, nurses: null });
@@ -40,6 +41,11 @@ const App = () => {
         <Route
           path="/signup"
           render={() => <Signup getUserLogged={getUserLogged} />}
+        />
+
+        <Route
+          path="/patients"
+          render={() => <PatientProfile user={state.user} />}
         />
 
         <Route
