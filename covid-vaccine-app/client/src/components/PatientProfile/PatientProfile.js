@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
-export default function PatientProfile({ getUserLogged }) {
+export default function PatientProfile({ user }) {
   const [profileInfo, setProfileInfo] = useState({
     first_name: "",
     last_name: "",
@@ -12,30 +12,39 @@ export default function PatientProfile({ getUserLogged }) {
     is_staff_senior_care: "",
   });
 
+  const [patientProfile, setPatientProfile] = useState(null);
+
   let history = useHistory();
 
   const submitHandler = (event) => {
     event.preventDefault();
-    //signup(signupInfo);
+    createProfile(profileInfo);
   };
 
-  // const signup = (signupInfo) => {
-  //   axios
-  //     .post("/api/signup", {
-  //       email: signupInfo.email,
-  //       password: signupInfo.password,
-  //     })
-  //     .then(function (response) {
-  //       const new_patient = response.data.new_patient;
-  //       console.log("new patient ", new_patient);
-  //       getUserLogged(new_patient);
+  const createProfile = (profileInfo) => {
+    axios
+      .post("/api/patients", {
+        patient_id: user[0].id,
+        first_name: profileInfo.first_name,
+        last_name: profileInfo.last_name,
+        age: profileInfo.age,
+        has_chronic_conditions: profileInfo.has_chronic_conditions,
+        is_health_care_worker: profileInfo.is_health_care_worker,
+        is_staff_senior_care: profileInfo.is_health_care_worker,
+      })
+      .then(function (response) {
+        console.log(response);
+        const new_profile = response.data.profile;
+        setPatientProfile(new_profile);
 
-  //       history.push(`/patients`);
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
+        history.push(`/patients/${user[0].id}`);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => console.log(patientProfile), [patientProfile]);
 
   return (
     <>
@@ -56,7 +65,7 @@ export default function PatientProfile({ getUserLogged }) {
           type="text"
           name="last-name"
           onChange={(event) =>
-            setProfileInfo({ ...profileInfo, first_name: event.target.value })
+            setProfileInfo({ ...profileInfo, last_name: event.target.value })
           }
           value={profileInfo.last_name}
         />
@@ -67,14 +76,14 @@ export default function PatientProfile({ getUserLogged }) {
           id="age"
           value={profileInfo.age}
           onChange={(event) =>
-            setProfileInfo({ ...profileInfo, age: event.target.age })
+            setProfileInfo({ ...profileInfo, age: event.target.value })
           }
         >
           <option value="placeholder">Select an option</option>
-          <option value="over_80">over 80 years old</option>
-          <option value="between60_80">60 - 80 years old</option>
-          <option value="between45_60">45 - 60 years old</option>
-          <option value="under_45">under 45 years old</option>
+          <option value="1">over 80 years old</option>
+          <option value="2">60 - 80 years old</option>
+          <option value="3">45 - 60 years old</option>
+          <option value="4">under 45 years old</option>
         </select>
 
         <label htmlFor="age">Do you have any chronic conditions?</label>
@@ -85,13 +94,13 @@ export default function PatientProfile({ getUserLogged }) {
           onChange={(event) =>
             setProfileInfo({
               ...profileInfo,
-              has_chronic_conditions: event.target.age,
+              has_chronic_conditions: event.target.value,
             })
           }
         >
           <option value="placeholder">Select an option</option>
-          <option value="1">Yes</option>
-          <option value="0">No</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
         </select>
 
         <label htmlFor="age">Are you a health worker professional?</label>
@@ -102,13 +111,13 @@ export default function PatientProfile({ getUserLogged }) {
           onChange={(event) =>
             setProfileInfo({
               ...profileInfo,
-              is_health_care_worker: event.target.age,
+              is_health_care_worker: event.target.value,
             })
           }
         >
           <option value="placeholder">Select an option</option>
-          <option value="1">Yes</option>
-          <option value="0">No</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
         </select>
 
         <label htmlFor="age">
@@ -121,13 +130,13 @@ export default function PatientProfile({ getUserLogged }) {
           onChange={(event) =>
             setProfileInfo({
               ...profileInfo,
-              is_staff_senior_care: event.target.age,
+              is_staff_senior_care: event.target.value,
             })
           }
         >
           <option value="placeholder">Select an option</option>
-          <option value="1">Yes</option>
-          <option value="0">No</option>
+          <option value="true">Yes</option>
+          <option value="false">No</option>
         </select>
 
         <input type="submit" value="Create Profile" />
