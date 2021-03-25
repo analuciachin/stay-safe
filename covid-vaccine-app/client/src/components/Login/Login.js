@@ -8,6 +8,7 @@ export default function Login({ userSelected, getUserLogged }) {
     username: "",
     password: "",
   });
+  const [error, setError] = useState(null);
 
   let history = useHistory();
 
@@ -31,9 +32,17 @@ export default function Login({ userSelected, getUserLogged }) {
         history.push(`/patients/${user.id}/appointments`);
       })
       .catch(function (error) {
-        console.log(error);
+        if (error.response && error.response.data) {
+          setError(error.response.data.message);
+        }
       });
   };
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  useEffect(() => console.log(error), [error]);
 
   return (
     <>
@@ -48,9 +57,10 @@ export default function Login({ userSelected, getUserLogged }) {
               <input
                 type="text"
                 name="email"
-                onChange={(event) =>
-                  setLoginInfo({ ...loginInfo, email: event.target.value })
-                }
+                onChange={(event) => {
+                  setLoginInfo({ ...loginInfo, email: event.target.value });
+                  clearError();
+                }}
                 value={loginInfo.email}
               />
             </div>
@@ -60,9 +70,10 @@ export default function Login({ userSelected, getUserLogged }) {
               <input
                 type="text"
                 name="username"
-                onChange={(event) =>
-                  setLoginInfo({ ...loginInfo, username: event.target.value })
-                }
+                onChange={(event) => {
+                  setLoginInfo({ ...loginInfo, username: event.target.value });
+                  clearError();
+                }}
                 value={loginInfo.username}
               />
             </div>
@@ -72,14 +83,16 @@ export default function Login({ userSelected, getUserLogged }) {
           <input
             type="password"
             name="password"
-            onChange={(event) =>
-              setLoginInfo({ ...loginInfo, password: event.target.value })
-            }
+            onChange={(event) => {
+              setLoginInfo({ ...loginInfo, password: event.target.value });
+              clearError();
+            }}
             value={loginInfo.password}
           />
           <input type="submit" value="Login" />
         </form>
       )}
+      {error && <h2>{error}</h2>}
       {userSelected === "Patient" && (
         <Link to={{ pathname: "/signup" }}>Sign up</Link>
       )}
