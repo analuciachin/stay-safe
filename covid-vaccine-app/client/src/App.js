@@ -8,10 +8,18 @@ import Signup from "./components/Signup/Signup";
 import PatientProfile from "./components/PatientProfile/PatientProfile";
 
 const App = () => {
-  const [state, setState] = useState({ user: null, nurses: null });
+  const [state, setState] = useState({
+    user: null,
+    nurses: null,
+    isHighRisk: null,
+  });
 
   const getUserLogged = (userLogged) => {
     setState({ ...state, user: userLogged });
+  };
+
+  const isPatientHighRisk = (risk) => {
+    setState({ ...state, isHighRisk: risk });
   };
 
   useEffect(() => {
@@ -44,13 +52,25 @@ const App = () => {
         />
 
         <Route
+          exact
           path="/patients"
-          render={() => <PatientProfile user={state.user} />}
+          render={() => (
+            <PatientProfile
+              user={state.user}
+              isPatientHighRisk={isPatientHighRisk}
+            />
+          )}
         />
 
         <Route
           path="/patients/:id/appointments"
-          render={() => <PatientAppt user={state.user} nurses={state.nurses} />}
+          render={() => (
+            <PatientAppt
+              user={state.user}
+              nurses={state.nurses}
+              isHighRisk={state.isHighRisk}
+            />
+          )}
         />
       </Switch>
     </Router>

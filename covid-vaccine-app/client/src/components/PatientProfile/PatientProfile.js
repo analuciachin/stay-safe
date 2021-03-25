@@ -2,7 +2,13 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
-export default function PatientProfile({ user }) {
+export default function PatientProfile({
+  user,
+  nurses,
+  isPatientHighRisk,
+  getUserLogged,
+  getNurses,
+}) {
   const [profileInfo, setProfileInfo] = useState({
     first_name: "",
     last_name: "",
@@ -21,6 +27,7 @@ export default function PatientProfile({ user }) {
     event.preventDefault();
     if (formValidation()) {
       createProfile(profileInfo);
+      checkPatientRisk();
     } else return false;
   };
 
@@ -36,11 +43,10 @@ export default function PatientProfile({ user }) {
         is_staff_senior_care: profileInfo.is_health_care_worker,
       })
       .then(function (response) {
-        console.log(response);
         const new_profile = response.data.profile;
         setPatientProfile(new_profile);
         setIsFormFilled(null);
-        history.push(`/patients/${user[0].id}`);
+        history.push(`/patients/${user[0].id}/appointments`);
       })
       .catch(function (error) {
         setIsFormFilled(null);
@@ -54,12 +60,12 @@ export default function PatientProfile({ user }) {
       profileInfo.last_name &&
       profileInfo.age > 0 &&
       profileInfo.age < 5 &&
-      (profileInfo.has_chronic_conditions === "0" ||
-        profileInfo.has_chronic_conditions === "1") &&
-      (profileInfo.is_health_care_worker === "0" ||
-        profileInfo.is_health_care_worker === "1") &&
-      (profileInfo.is_staff_senior_care === "0" ||
-        profileInfo.is_staff_senior_care === "1")
+      (profileInfo.has_chronic_conditions === "true" ||
+        profileInfo.has_chronic_conditions === "false") &&
+      (profileInfo.is_health_care_worker === "true" ||
+        profileInfo.is_health_care_worker === "false") &&
+      (profileInfo.is_staff_senior_care === "true" ||
+        profileInfo.is_staff_senior_care === "false")
     ) {
       setIsFormFilled(true);
       return true;
@@ -73,7 +79,18 @@ export default function PatientProfile({ user }) {
     setIsFormFilled(null);
   };
 
-  useEffect(() => console.log(isFormFilled), [isFormFilled]);
+  const checkPatientRisk = () => {
+    if (
+      profileInfo.age === 1 ||
+      profileInfo.has_chronic_conditions === true ||
+      profileInfo.is_health_care_worker === true ||
+      profileInfo.is_staff_senior_care === true
+    ) {
+      isPatientHighRisk(true);
+    } else isPatientHighRisk(false);
+  };
+
+  //useEffect(() => console.log(isFormFilled), [isFormFilled]);
 
   return (
     <>
