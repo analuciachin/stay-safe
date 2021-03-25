@@ -16,7 +16,7 @@ module.exports = (db) => {
         .then((data) => {
           console.log("data ", data);
           if (data.rows.length === 0) {
-            res.status(401).send("Invalid email");
+            res.status(401).json({ message: "Invalid email" });
           } else {
             const patient_password = data.rows[0].password;
             if (patient_password == password) {
@@ -26,7 +26,7 @@ module.exports = (db) => {
               user.type = "patient";
               res.json({ user });
             } else {
-              res.status(401).send("Invalid password");
+              res.status(401).send({ message: "Invalid password" });
             }
           }
         })
@@ -39,7 +39,7 @@ module.exports = (db) => {
         .then((data) => {
           console.log("data ", data);
           if (data.rows.length === 0) {
-            res.status(401).send("Invalid username");
+            res.status(401).send({ message: "Invalid username" });
           } else {
             const nurse_password = data.rows[0].password;
             if (nurse_password == password) {
@@ -50,7 +50,7 @@ module.exports = (db) => {
               console.log(user);
               res.json({ user });
             } else {
-              res.status(401).send("Invalid password");
+              res.status(401).send({ message: "Invalid password" });
             }
           }
         })
