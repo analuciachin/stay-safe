@@ -15,14 +15,18 @@ export default function ApptForm(props) {
     isActionUpdate,
     getIsApptUpdated,
     getIsActionUpdate,
+    isHighRisk,
   } = props;
 
   const [bookApptForm, setBookApptForm] = useState({
     date: "",
     time: "",
     nurse_id: "",
-    is_high_risk: "",
+    is_high_risk: isHighRisk,
   });
+
+  useEffect(() => console.log(user), [user]);
+  const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -33,12 +37,11 @@ export default function ApptForm(props) {
       });
     } else {
       isNurseAvailable(bookApptForm.nurse_id, () => {
-        bookAppt(user.id);
+        console.log(user);
+        bookAppt(user[0].id);
       });
     }
   };
-
-  const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
 
   const bookAppt = (patientId) => {
     console.log(bookApptForm.nurse_id);
@@ -176,18 +179,8 @@ export default function ApptForm(props) {
           </option>
         ))}
       </select>
-      <label htmlFor="high-risk">High Risk</label>
-      <input
-        type="text"
-        value={bookApptForm.is_high_risk}
-        onChange={(event) => {
-          setBookApptForm({
-            ...bookApptForm,
-            is_high_risk: event.target.value,
-          });
-          clearStatus();
-        }}
-      />
+      <label htmlFor="high-risk">High Risk: </label>
+      <span>{isHighRisk === true ? "Yes" : "No"}</span>
 
       <input type="submit" value={action} />
     </form>

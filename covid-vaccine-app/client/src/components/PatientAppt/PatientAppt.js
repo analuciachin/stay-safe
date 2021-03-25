@@ -5,7 +5,7 @@ import axios from "axios";
 import "../ApptForm/ApptForm";
 import ApptForm from "../ApptForm/ApptForm";
 
-export default function PatientAppt({ user, nurses }) {
+export default function PatientAppt({ user, nurses, isHighRisk }) {
   const [appointment, setAppointment] = useState(null);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
   const [isApptBooked, setIsApptBooked] = useState(null);
@@ -117,6 +117,7 @@ export default function PatientAppt({ user, nurses }) {
               isActionUpdate={isActionUpdate}
               getIsApptUpdated={getIsApptUpdated}
               getIsActionUpdate={getIsActionUpdate}
+              isHighRisk={isHighRisk}
             />
           )}
           {isApptUpdated && <h3>Your appointment was updated successfuly!</h3>}
@@ -148,6 +149,7 @@ export default function PatientAppt({ user, nurses }) {
             isActionUpdate={isActionUpdate}
             getIsApptUpdated={getIsApptUpdated}
             getIsActionUpdate={getIsActionUpdate}
+            isHighRisk={isHighRisk}
           />
 
           {isApptBooked && <h3>Your appointment was booked successfuly!</h3>}
