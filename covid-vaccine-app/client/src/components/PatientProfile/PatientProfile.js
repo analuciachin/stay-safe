@@ -2,13 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
-export default function PatientProfile({
-  user,
-  nurses,
-  isPatientHighRisk,
-  getUserLogged,
-  getNurses,
-}) {
+export default function PatientProfile({ user, isPatientHighRisk }) {
   const [profileInfo, setProfileInfo] = useState({
     first_name: "",
     last_name: "",

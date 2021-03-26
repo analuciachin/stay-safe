@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import axios from "axios";
+import "bootstrap/dist/css/bootstrap.css";
+import Container from "react-bootstrap/Container";
 
 import UserOptions from "./components/UserOptions/UserOptions";
 import PatientAppt from "./components/PatientAppt/PatientAppt";
@@ -33,47 +35,48 @@ const App = () => {
   useEffect(() => console.log(state), [state]);
 
   return (
-    <Router>
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <div>
-              <h1>Login</h1>
-              <UserOptions getUserLogged={getUserLogged} />
-            </div>
-          )}
-        />
+    <Container fluid>
+      <Router>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <div>
+                <UserOptions getUserLogged={getUserLogged} />
+              </div>
+            )}
+          />
 
-        <Route
-          path="/signup"
-          render={() => <Signup getUserLogged={getUserLogged} />}
-        />
+          <Route
+            path="/signup"
+            render={() => <Signup getUserLogged={getUserLogged} />}
+          />
 
-        <Route
-          exact
-          path="/patients"
-          render={() => (
-            <PatientProfile
-              user={state.user}
-              isPatientHighRisk={isPatientHighRisk}
-            />
-          )}
-        />
+          <Route
+            exact
+            path="/patients"
+            render={() => (
+              <PatientProfile
+                user={state.user}
+                isPatientHighRisk={isPatientHighRisk}
+              />
+            )}
+          />
 
-        <Route
-          path="/patients/:id/appointments"
-          render={() => (
-            <PatientAppt
-              user={state.user}
-              nurses={state.nurses}
-              isHighRisk={state.isHighRisk}
-            />
-          )}
-        />
-      </Switch>
-    </Router>
+          <Route
+            path="/patients/:id/appointments"
+            render={() => (
+              <PatientAppt
+                user={state.user}
+                nurses={state.nurses}
+                isHighRisk={state.isHighRisk}
+              />
+            )}
+          />
+        </Switch>
+      </Router>
+    </Container>
   );
 };
 

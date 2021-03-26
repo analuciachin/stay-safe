@@ -1,0 +1,29 @@
+label {
+  font-size: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 4px 0;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  width: 30%;
+  padding: 12px 20px;
+  margin: 4px 0;
+  box-sizing: border-box;
+  color: #fff;
+  background-color: #ff5c33;
+  border-color: #ff5c33;
+  font-size: 20px;
+}
+
+.signup {
+  font-size: 20px;
+}
+
+p {
+  font-size: 20px;
+}
