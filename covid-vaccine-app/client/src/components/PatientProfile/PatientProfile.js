@@ -26,8 +26,8 @@ export default function PatientProfile({
   const submitHandler = (event) => {
     event.preventDefault();
     if (formValidation()) {
-      createProfile(profileInfo);
       checkPatientRisk();
+      createProfile(profileInfo);
     } else return false;
   };
 
@@ -81,13 +81,17 @@ export default function PatientProfile({
 
   const checkPatientRisk = () => {
     if (
-      profileInfo.age === 1 ||
-      profileInfo.has_chronic_conditions === true ||
-      profileInfo.is_health_care_worker === true ||
-      profileInfo.is_staff_senior_care === true
+      profileInfo.age === "1" ||
+      profileInfo.has_chronic_conditions === "true" ||
+      profileInfo.is_health_care_worker === "true" ||
+      profileInfo.is_staff_senior_care === "true"
     ) {
+      console.log("risk ", true);
       isPatientHighRisk(true);
-    } else isPatientHighRisk(false);
+    } else {
+      console.log("risk ", false);
+      isPatientHighRisk(false);
+    }
   };
 
   //useEffect(() => console.log(isFormFilled), [isFormFilled]);
