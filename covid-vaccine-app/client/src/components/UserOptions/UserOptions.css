@@ -1,0 +1,30 @@
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
+
+.title {
+  font-family: "Kaushan Script", cursive, sans-serif;
+  font-size: 90px;
+  color: #ff5c33;
+}
+
+li {
+  display: inline;
+  margin: 20px;
+}
+
+.vaccine-img {
+  width: 100%;
+  height: auto;
+}
+
+button {
+  color: #fff;
+  background-color: #ff5c33;
+  border-color: #ff5c33;
+  padding: 10px 20px;
+  font-size: 20px;
+}
+
+button:active .user-btn:focus {
+  background-color: #e62e00;
+  border-color: #e62e00;
+}
