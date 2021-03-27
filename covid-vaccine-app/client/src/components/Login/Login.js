@@ -6,19 +6,26 @@ import Form from "react-bootstrap/Form";
 
 import "./Login.css";
 
-export default function Login({ userSelected, getUserLogged }) {
+export default function Login({
+  userSelected,
+  getUserLogged,
+  getError,
+  clearError,
+  error,
+}) {
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     username: "",
     password: "",
   });
-  const [error, setError] = useState(null);
 
   let history = useHistory();
 
   const submitHandler = (event) => {
     event.preventDefault();
-    login(loginInfo);
+    if (validateForm()) {
+      login(loginInfo);
+    }
   };
 
   const login = (loginInfo) => {
@@ -37,13 +44,27 @@ export default function Login({ userSelected, getUserLogged }) {
       })
       .catch(function (error) {
         if (error.response && error.response.data) {
-          setError(error.response.data.message);
+          getError(error.response.data.message);
         }
       });
   };
 
-  const clearError = () => {
-    setError(null);
+  const validateForm = () => {
+    if (
+      userSelected === "Patient" &&
+      (!loginInfo.email || !loginInfo.password)
+    ) {
+      console.log("invalid patient");
+      getError("Email and password cannot be blank");
+      return false;
+    } else if (
+      userSelected === "Nurse" &&
+      (!loginInfo.username || !loginInfo.password)
+    ) {
+      console.log("invalid nurse");
+      getError("Username and password cannot be blank");
+      return false;
+    } else return true;
   };
 
   useEffect(() => console.log(error), [error]);
@@ -57,7 +78,7 @@ export default function Login({ userSelected, getUserLogged }) {
         <Form onSubmit={submitHandler} className="text-center">
           {userSelected === "Patient" ? (
             <div>
-              <label htmlFor="email" className="mt-2 mb-2">
+              <label htmlFor="email" className="mt-5 mb-5">
                 Email
               </label>
               <input
@@ -105,12 +126,12 @@ export default function Login({ userSelected, getUserLogged }) {
           <input type="submit" value="Login" className="mt-5 mb-2" />
         </Form>
       )}
-      {error && <h2>{error}</h2>}
       {userSelected === "Patient" && (
-        <div className="text-center signup mt-3">
+        <div className="text-center signup mt-3 mb-5">
           <Link to={{ pathname: "/signup" }}>Sign up</Link>
         </div>
       )}
+      {error && <p className="error text-center mt-5">{error}</p>}
     </>
   );
 }

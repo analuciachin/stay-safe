@@ -8,6 +8,7 @@ import Form from "react-bootstrap/Form";
 
 import "bootstrap/dist/css/bootstrap.css";
 import vaccine from "../../images/health-doctor-vaccine.svg";
+import "./Signup.css";
 
 export default function Signup({ getUserLogged }) {
   const [signupInfo, setSignupInfo] = useState({
@@ -15,11 +16,15 @@ export default function Signup({ getUserLogged }) {
     password: "",
   });
 
+  const [error, setError] = useState(null);
+
   let history = useHistory();
 
   const submitHandler = (event) => {
     event.preventDefault();
-    signup(signupInfo);
+    if (validateForm()) {
+      signup(signupInfo);
+    }
   };
 
   const signup = (signupInfo) => {
@@ -36,8 +41,21 @@ export default function Signup({ getUserLogged }) {
         history.push(`/patients`);
       })
       .catch(function (error) {
-        console.log(error);
+        if (error.response && error.response.data) {
+          setError(error.response.data.message);
+        }
       });
+  };
+
+  const validateForm = () => {
+    if (!signupInfo.email || !signupInfo.password) {
+      setError("Email and password cannot be blank");
+      return false;
+    } else return true;
+  };
+
+  const clearError = () => {
+    setError(null);
   };
 
   return (
@@ -57,9 +75,10 @@ export default function Signup({ getUserLogged }) {
               type="text"
               name="email"
               className="mt-2 mb-4"
-              onChange={(event) =>
-                setSignupInfo({ ...signupInfo, email: event.target.value })
-              }
+              onChange={(event) => {
+                setSignupInfo({ ...signupInfo, email: event.target.value });
+                clearError();
+              }}
               value={signupInfo.email}
             />
 
@@ -70,13 +89,15 @@ export default function Signup({ getUserLogged }) {
               type="password"
               name="password"
               className="mt-2 mb-4"
-              onChange={(event) =>
-                setSignupInfo({ ...signupInfo, password: event.target.value })
-              }
+              onChange={(event) => {
+                setSignupInfo({ ...signupInfo, password: event.target.value });
+                clearError();
+              }}
               value={signupInfo.password}
             />
             <input type="submit" value="Sign-up" className="mt-5 mb-2" />
           </Form>
+          {error && <p className="error text-center mt-5">{error}</p>}
         </Col>
       </Row>
     </>

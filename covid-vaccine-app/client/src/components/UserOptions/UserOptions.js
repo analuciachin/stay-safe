@@ -12,6 +12,15 @@ export default function UserOptions({ getUserLogged }) {
   const users = ["Nurse", "Patient"];
 
   const [userSelected, setUserSelected] = useState(null);
+  const [error, setError] = useState(null);
+
+  const clearError = () => {
+    setError(null);
+  };
+
+  const getError = (error) => {
+    setError(error);
+  };
 
   const getSelectedUser = function (user) {
     setUserSelected(user);
@@ -30,7 +39,10 @@ export default function UserOptions({ getUserLogged }) {
             {users.map((user) => (
               <li key={user}>
                 <button
-                  onClick={() => getSelectedUser(user)}
+                  onClick={() => {
+                    getSelectedUser(user);
+                    clearError();
+                  }}
                   className="user-btn"
                 >
                   {user}
@@ -38,7 +50,13 @@ export default function UserOptions({ getUserLogged }) {
               </li>
             ))}
           </ul>
-          <Login userSelected={userSelected} getUserLogged={getUserLogged} />
+          <Login
+            userSelected={userSelected}
+            getUserLogged={getUserLogged}
+            getError={getError}
+            clearError={clearError}
+            error={error}
+          />
         </Col>
       </Row>
     </>

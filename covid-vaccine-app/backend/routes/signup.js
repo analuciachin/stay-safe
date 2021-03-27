@@ -13,7 +13,7 @@ module.exports = (db) => {
         //console.log("data ", data.rows);
         const patient = data.rows;
         if (patient.length > 0) {
-          res.status(409).send("Email already registered");
+          res.status(409).send({ message: "Email already registered" });
         } else {
           return db
             .query(
