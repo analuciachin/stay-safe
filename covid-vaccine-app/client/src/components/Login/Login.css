@@ -27,3 +27,9 @@ input[type="submit"] {
 p {
   font-size: 20px;
 }
+
+.error {
+  font-size: 24px;
+  color: #ff0000;
+  font-weight: bold;
+}
