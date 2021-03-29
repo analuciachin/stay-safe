@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+//import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
-import "../ApptForm/ApptForm";
 import ApptForm from "../ApptForm/ApptForm";
+
+import "./PatientAppt.css";
+import "bootstrap/dist/css/bootstrap.css";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import booked from "../../images/appt_booked.svg";
 
 export default function PatientAppt({ user, nurses, isHighRisk }) {
   const [appointment, setAppointment] = useState(null);
@@ -82,79 +88,105 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
 
   return (
     <>
-      {appointment && appointment.length > 0 ? (
-        <div>
-          <h3>Your appointment information</h3>
-          <p>
-            Date: <span>{getDate(appointment[0].appt_date)}</span>
-          </p>
-          <p>
-            Time: <span>{convert24hTo12h(appointment[0].appt_date)}</span>
-          </p>
-          <p>
-            Nurse:{" "}
-            <span>
-              {appointment[0].nurse_first_name} {appointment[0].nurse_last_name}
-            </span>
-          </p>
-          <p>
-            Is this a high priority appointment?{" "}
-            {appointment[0].is_high_priority ? "Yes" : "No"}{" "}
-          </p>
-          <button onClick={getIsActionUpdate}>Update</button>
-          <button onClick={() => deleteAppt(appointment[0].id)}>Delete</button>
+      <Row className="align-items-center">
+        <Col>
+          <div className="img-container">
+            <img src={booked} alt="appt-booked" className="appt-booked-img" />
+          </div>
+          <p className="text-center title">Stay Safe</p>
+        </Col>
+        <Col>
+          <div>
+            {appointment && appointment.length > 0 ? (
+              <div>
+                <h1 className="mt-5 mb-5 text-center">
+                  Your appointment information
+                </h1>
+                <p className="mt-3 mb-3 text-center">
+                  Date: <span>{getDate(appointment[0].appt_date)}</span>
+                </p>
+                <p className="mt-3 mb-3 text-center">
+                  Time: <span>{convert24hTo12h(appointment[0].appt_date)}</span>
+                </p>
+                <p className="mt-3 mb-3 text-center">
+                  Nurse:{" "}
+                  <span>
+                    {appointment[0].nurse_first_name}{" "}
+                    {appointment[0].nurse_last_name}
+                  </span>
+                </p>
+                <p className="mt-3 mb-5 text-center">
+                  Is this a high priority appointment?{" "}
+                  {appointment[0].is_high_priority ? "Yes" : "No"}{" "}
+                </p>
+                <div className="text-center mt-5">
+                  <button onClick={getIsActionUpdate} className="mr-5">
+                    Update
+                  </button>
+                  <button onClick={() => deleteAppt(appointment[0].id)}>
+                    Delete
+                  </button>
+                </div>
+                {isActionUpdate && (
+                  <ApptForm
+                    user={user}
+                    nurses={nurses}
+                    apptId={appointment[0].id}
+                    action="Update"
+                    getErrorBookAppt={getErrorBookAppt}
+                    getIsApptBooked={getIsApptBooked}
+                    getDate={getDate}
+                    getTime={getTime}
+                    isActionUpdate={isActionUpdate}
+                    getIsApptUpdated={getIsApptUpdated}
+                    getIsActionUpdate={getIsActionUpdate}
+                    isHighRisk={isHighRisk}
+                  />
+                )}
+                {isApptUpdated && (
+                  <h3>Your appointment was updated successfuly!</h3>
+                )}
+                {errorBookAppt && (
+                  <h3>
+                    Nurse is not available at this date/time. Please change the
+                    date/time of your appointment.
+                  </h3>
+                )}
+              </div>
+            ) : (
+              <div>
+                <h3>
+                  Please book an appointment to get your COVID-19 vaccine.
+                </h3>
+                {errorBookAppt && (
+                  <h3>
+                    Nurse is not available at this date/time. Please change the
+                    date/time of your appointment.
+                  </h3>
+                )}
 
-          {isActionUpdate && (
-            <ApptForm
-              user={user}
-              nurses={nurses}
-              apptId={appointment[0].id}
-              action="Update"
-              getErrorBookAppt={getErrorBookAppt}
-              getIsApptBooked={getIsApptBooked}
-              getDate={getDate}
-              getTime={getTime}
-              isActionUpdate={isActionUpdate}
-              getIsApptUpdated={getIsApptUpdated}
-              getIsActionUpdate={getIsActionUpdate}
-              isHighRisk={isHighRisk}
-            />
-          )}
-          {isApptUpdated && <h3>Your appointment was updated successfuly!</h3>}
-          {errorBookAppt && (
-            <h3>
-              Nurse is not available at this date/time. Please change the
-              date/time of your appointment.
-            </h3>
-          )}
-        </div>
-      ) : (
-        <div>
-          <h3>Please book an appointment to get your COVID-19 vaccine.</h3>
-          {errorBookAppt && (
-            <h3>
-              Nurse is not available at this date/time. Please change the
-              date/time of your appointment.
-            </h3>
-          )}
+                <ApptForm
+                  user={user}
+                  nurses={nurses}
+                  action="Book an appointment"
+                  getErrorBookAppt={getErrorBookAppt}
+                  getIsApptBooked={getIsApptBooked}
+                  getDate={getDate}
+                  getTime={getTime}
+                  isActionUpdate={isActionUpdate}
+                  getIsApptUpdated={getIsApptUpdated}
+                  getIsActionUpdate={getIsActionUpdate}
+                  isHighRisk={isHighRisk}
+                />
 
-          <ApptForm
-            user={user}
-            nurses={nurses}
-            action="Book an appointment"
-            getErrorBookAppt={getErrorBookAppt}
-            getIsApptBooked={getIsApptBooked}
-            getDate={getDate}
-            getTime={getTime}
-            isActionUpdate={isActionUpdate}
-            getIsApptUpdated={getIsApptUpdated}
-            getIsActionUpdate={getIsActionUpdate}
-            isHighRisk={isHighRisk}
-          />
-
-          {isApptBooked && <h3>Your appointment was booked successfuly!</h3>}
-        </div>
-      )}
+                {isApptBooked && (
+                  <h3>Your appointment was booked successfuly!</h3>
+                )}
+              </div>
+            )}
+          </div>
+        </Col>
+      </Row>
     </>
   );
 }
