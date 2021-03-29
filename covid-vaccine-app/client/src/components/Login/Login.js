@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
+import "bootstrap/dist/css/bootstrap.css";
 import Form from "react-bootstrap/Form";
 
 import "./Login.css";
@@ -84,7 +85,7 @@ export default function Login({
               <input
                 type="text"
                 name="email"
-                className="mt-2 mb-4"
+                className="mt-2 mb-4 login-input"
                 onChange={(event) => {
                   setLoginInfo({ ...loginInfo, email: event.target.value });
                   clearError();
@@ -100,7 +101,7 @@ export default function Login({
               <input
                 type="text"
                 name="username"
-                className="mt-2 mb-4"
+                className="mt-2 mb-4 login-input"
                 onChange={(event) => {
                   setLoginInfo({ ...loginInfo, username: event.target.value });
                   clearError();
@@ -116,7 +117,7 @@ export default function Login({
           <input
             type="password"
             name="password"
-            className="mt-2 mb-3"
+            className="mt-2 mb-3 login-input"
             onChange={(event) => {
               setLoginInfo({ ...loginInfo, password: event.target.value });
               clearError();
