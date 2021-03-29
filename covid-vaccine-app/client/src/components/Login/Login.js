@@ -85,7 +85,7 @@ export default function Login({
               <input
                 type="text"
                 name="email"
-                className="mt-2 mb-4 login-input"
+                className="mt-2 mb-4 login-signup-input"
                 onChange={(event) => {
                   setLoginInfo({ ...loginInfo, email: event.target.value });
                   clearError();
@@ -101,7 +101,7 @@ export default function Login({
               <input
                 type="text"
                 name="username"
-                className="mt-2 mb-4 login-input"
+                className="mt-2 mb-4 login-signup-input"
                 onChange={(event) => {
                   setLoginInfo({ ...loginInfo, username: event.target.value });
                   clearError();
@@ -117,7 +117,7 @@ export default function Login({
           <input
             type="password"
             name="password"
-            className="mt-2 mb-3 login-input"
+            className="mt-2 mb-3 login-signup-input"
             onChange={(event) => {
               setLoginInfo({ ...loginInfo, password: event.target.value });
               clearError();
