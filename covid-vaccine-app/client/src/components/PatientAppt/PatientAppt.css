@@ -1,0 +1,23 @@
+.img-container {
+  position: relative;
+  width: 500px;
+  height: 800px;
+}
+.appt-booked-img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: auto 50%;
+  min-height: 50px;
+}
+
+h1 {
+  word-spacing: 3px;
+  letter-spacing: 2px;
+}
+
+p {
+  font-size: 22px;
+  word-spacing: 2px;
+  letter-spacing: 1px;
+}

@@ -74,7 +74,7 @@ export default function Signup({ getUserLogged }) {
             <input
               type="text"
               name="email"
-              className="mt-2 mb-4"
+              className="mt-2 mb-4 login-signup-input"
               onChange={(event) => {
                 setSignupInfo({ ...signupInfo, email: event.target.value });
                 clearError();
@@ -88,7 +88,7 @@ export default function Signup({ getUserLogged }) {
             <input
               type="password"
               name="password"
-              className="mt-2 mb-4"
+              className="mt-2 mb-4 login-signup-input"
               onChange={(event) => {
                 setSignupInfo({ ...signupInfo, password: event.target.value });
                 clearError();
