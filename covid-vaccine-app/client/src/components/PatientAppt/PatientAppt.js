@@ -11,7 +11,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import booked from "../../images/appt_booked.svg";
 
-export default function PatientAppt({ user, nurses, isHighRisk }) {
+export default function PatientAppt({ user, nurses }) {
   const [appointment, setAppointment] = useState(null);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
   const [isApptBooked, setIsApptBooked] = useState(null);
@@ -139,7 +139,6 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
                   isActionUpdate={isActionUpdate}
                   getIsApptUpdated={getIsApptUpdated}
                   getIsActionUpdate={getIsActionUpdate}
-                  isHighRisk={isHighRisk}
                 />
               )}
               {isApptUpdated && (
@@ -177,12 +176,11 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
                 isActionUpdate={isActionUpdate}
                 getIsApptUpdated={getIsApptUpdated}
                 getIsActionUpdate={getIsActionUpdate}
-                isHighRisk={isHighRisk}
               />
 
               {isApptBooked && (
-                <h3 className="mt-3 mb-3">
-                  Your appointment was booked successfuly!
+                <h3 className="mt-5 mb-3 success">
+                  Your appointment was booked successfully!
                 </h3>
               )}
             </div>

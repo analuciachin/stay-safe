@@ -20,18 +20,36 @@ export default function ApptForm(props) {
     isActionUpdate,
     getIsApptUpdated,
     getIsActionUpdate,
-    isHighRisk,
   } = props;
 
+  console.log(user);
   const [bookApptForm, setBookApptForm] = useState({
     date: "",
     time: "",
     nurse_id: "",
-    is_high_risk: isHighRisk,
+    is_high_risk: "",
   });
 
-  useEffect(() => console.log(user), [user]);
   const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
+
+  useEffect(() => {
+    axios.get(`/api/patients/${user.id}`).then((response) => {
+      const profile = response.data.profile[0];
+      console.log(profile);
+      if (
+        profile.age === "1" ||
+        profile.has_chronic_conditions === "true" ||
+        profile.is_health_care_worker === "true" ||
+        profile.is_staff_senior_care === "true"
+      ) {
+        console.log("risk ", true);
+        setBookApptForm({ ...bookApptForm, is_high_risk: true });
+      } else {
+        console.log("risk ", false);
+        setBookApptForm({ ...bookApptForm, is_high_risk: false });
+      }
+    });
+  }, []);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -43,7 +61,8 @@ export default function ApptForm(props) {
     } else {
       isNurseAvailable(bookApptForm.nurse_id, () => {
         console.log(user);
-        bookAppt(user[0].id);
+        // bookAppt(user[0].id);
+        bookAppt(user.id);
       });
     }
   };
@@ -205,7 +224,7 @@ export default function ApptForm(props) {
             High Risk:{" "}
           </label>
           <span className="mt-3 mb-5 patient-risk">
-            {isHighRisk === true ? "Yes" : "No"}
+            {bookApptForm.is_high_risk === true ? "Yes" : "No"}
           </span>
         </div>
       </div>

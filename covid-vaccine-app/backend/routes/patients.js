@@ -142,6 +142,8 @@ module.exports = (db) => {
     const patient_id = req.params.id;
     const is_high_priority = req.body.is_high_priority;
 
+    console.log(appt_date, nurse_id, patient_id, is_high_priority);
+
     if (appt_date === "" || nurse_id === "" || patient_id === "") {
       res.status(401).send("There are empty fields in the form.");
       return;
