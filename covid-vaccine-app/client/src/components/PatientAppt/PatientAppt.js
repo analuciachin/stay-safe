@@ -156,9 +156,9 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
             </div>
           ) : (
             <div>
-              <h3 className="mt-5 mb-5">
+              <h2 className="mt-5 mb-5">
                 Please book an appointment to get your COVID-19 vaccine.
-              </h3>
+              </h2>
               {errorBookAppt && (
                 <h3 className="mt-3 mb-3 error">
                   Nurse is not available at this date/time. Please change the

@@ -4,7 +4,8 @@ import axios from "axios";
 
 import "bootstrap/dist/css/bootstrap.css";
 import Form from "react-bootstrap/Form";
-import FormLabel from "react-bootstrap/esm/FormLabel";
+
+import "./ApptForm.css";
 
 export default function ApptForm(props) {
   const {
@@ -133,10 +134,13 @@ export default function ApptForm(props) {
   return (
     <Form onSubmit={submitHandler}>
       <div>
-        <label htmlFor="appt-time">Date: </label>
+        <label htmlFor="appt-time" className="mr-3 mb-3">
+          Date:{" "}
+        </label>
         <input
           type="date"
           value={bookApptForm.date}
+          className="mb-3"
           onChange={(event) => {
             setBookApptForm({
               ...bookApptForm,
@@ -148,10 +152,13 @@ export default function ApptForm(props) {
       </div>
 
       <div>
-        <label htmlFor="appt-time">Time: </label>
+        <label htmlFor="appt-time" className="mt-3 mb-2">
+          Time:{" "}
+        </label>
         <Form.Control
           as="select"
           value={bookApptForm.time}
+          className="mb-3"
           onChange={(event) => {
             setBookApptForm({
               ...bookApptForm,
@@ -171,9 +178,12 @@ export default function ApptForm(props) {
       </div>
 
       <div>
-        <label htmlFor="nurse">Nurse: </label>
+        <label htmlFor="nurse" className="mt-3 mb-2">
+          Nurse:{" "}
+        </label>
         <Form.Control
           as="select"
+          className="mb-3"
           value={bookApptForm.nurse_id}
           onChange={(event) => {
             setBookApptForm({
@@ -191,8 +201,12 @@ export default function ApptForm(props) {
           ))}
         </Form.Control>
         <div>
-          <label htmlFor="high-risk">High Risk: </label>
-          <span>{isHighRisk === true ? "Yes" : "No"}</span>
+          <label htmlFor="high-risk" className="mr-3 mt-3 mb-5">
+            High Risk:{" "}
+          </label>
+          <span className="mt-3 mb-5 patient-risk">
+            {isHighRisk === true ? "Yes" : "No"}
+          </span>
         </div>
       </div>
 
