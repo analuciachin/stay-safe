@@ -1,14 +1,14 @@
 .img-container {
   position: relative;
   width: 500px;
-  height: 800px;
+  height: 700px;
 }
 .appt-booked-img {
   position: absolute;
   top: 0;
   bottom: 0;
   margin: auto 50%;
-  min-height: 50px;
+  width: 150%;
 }
 
 h1 {
@@ -20,4 +20,8 @@ p {
   font-size: 22px;
   word-spacing: 2px;
   letter-spacing: 1px;
+}
+
+.success {
+  color: #248f24;
 }

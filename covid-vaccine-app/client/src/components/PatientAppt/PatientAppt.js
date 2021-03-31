@@ -11,7 +11,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import booked from "../../images/appt_booked.svg";
 
-export default function PatientAppt({ user, nurses, isHighRisk }) {
+export default function PatientAppt({ user, nurses }) {
   const [appointment, setAppointment] = useState(null);
   const [errorBookAppt, setErrorBookAppt] = useState(null);
   const [isApptBooked, setIsApptBooked] = useState(null);
@@ -86,6 +86,11 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
     setIsApptUpdated(status);
   };
 
+  const clearStates = () => {
+    setIsApptBooked(null);
+    setIsApptUpdated(null);
+  };
+
   return (
     <>
       <Row className="align-items-center">
@@ -119,34 +124,46 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
                 {appointment[0].is_high_priority ? "Yes" : "No"}{" "}
               </p>
               <div className="text-center mt-5">
-                <button onClick={getIsActionUpdate} className="mr-5">
+                <button
+                  onClick={() => {
+                    getIsActionUpdate();
+                    clearStates();
+                  }}
+                  className="mr-5"
+                >
                   Update
                 </button>
-                <button onClick={() => deleteAppt(appointment[0].id)}>
+                <button
+                  onClick={() => {
+                    deleteAppt(appointment[0].id);
+                    clearStates();
+                  }}
+                >
                   Delete
                 </button>
               </div>
-              {isActionUpdate && (
-                <ApptForm
-                  user={user}
-                  nurses={nurses}
-                  apptId={appointment[0].id}
-                  action="Update"
-                  getErrorBookAppt={getErrorBookAppt}
-                  getIsApptBooked={getIsApptBooked}
-                  getDate={getDate}
-                  getTime={getTime}
-                  isActionUpdate={isActionUpdate}
-                  getIsApptUpdated={getIsApptUpdated}
-                  getIsActionUpdate={getIsActionUpdate}
-                  isHighRisk={isHighRisk}
-                />
-              )}
-              {isApptUpdated && (
-                <h3 className="mt-5 mb-5">
-                  Your appointment was updated successfuly!
-                </h3>
-              )}
+              <div className="mt-5">
+                {isActionUpdate && (
+                  <ApptForm
+                    user={user}
+                    nurses={nurses}
+                    apptId={appointment[0].id}
+                    action="Update"
+                    getErrorBookAppt={getErrorBookAppt}
+                    getIsApptBooked={getIsApptBooked}
+                    getDate={getDate}
+                    getTime={getTime}
+                    isActionUpdate={isActionUpdate}
+                    getIsApptUpdated={getIsApptUpdated}
+                    getIsActionUpdate={getIsActionUpdate}
+                  />
+                )}
+                {isApptUpdated && (
+                  <h3 className="mt-5 mb-5 success">
+                    Your appointment was updated successfully!
+                  </h3>
+                )}
+              </div>
               {errorBookAppt && (
                 <h3 className="mt-5 mb-5 error">
                   Nurse is not available at this date/time. Please change the
@@ -156,9 +173,9 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
             </div>
           ) : (
             <div>
-              <h3 className="mt-5 mb-5">
+              <h2 className="mt-5 mb-5">
                 Please book an appointment to get your COVID-19 vaccine.
-              </h3>
+              </h2>
               {errorBookAppt && (
                 <h3 className="mt-3 mb-3 error">
                   Nurse is not available at this date/time. Please change the
@@ -177,12 +194,11 @@ export default function PatientAppt({ user, nurses, isHighRisk }) {
                 isActionUpdate={isActionUpdate}
                 getIsApptUpdated={getIsApptUpdated}
                 getIsActionUpdate={getIsActionUpdate}
-                isHighRisk={isHighRisk}
               />
 
               {isApptBooked && (
-                <h3 className="mt-3 mb-3">
-                  Your appointment was booked successfuly!
+                <h3 className="mt-5 mb-3 success">
+                  Your appointment was booked successfully!
                 </h3>
               )}
             </div>

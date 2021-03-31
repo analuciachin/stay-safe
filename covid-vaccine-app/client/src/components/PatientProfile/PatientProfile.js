@@ -9,7 +9,9 @@ import Col from "react-bootstrap/Col";
 
 import "./PatientProfile.css";
 
-export default function PatientProfile({ user, isPatientHighRisk }) {
+export default function PatientProfile({ user }) {
+  console.log("user", user);
+
   const [profileInfo, setProfileInfo] = useState({
     first_name: "",
     last_name: "",
@@ -27,7 +29,7 @@ export default function PatientProfile({ user, isPatientHighRisk }) {
   const submitHandler = (event) => {
     event.preventDefault();
     if (formValidation()) {
-      checkPatientRisk();
+      //checkPatientRisk();
       createProfile(profileInfo);
     } else return false;
   };
@@ -35,7 +37,7 @@ export default function PatientProfile({ user, isPatientHighRisk }) {
   const createProfile = (profileInfo) => {
     axios
       .post("/api/patients", {
-        patient_id: user[0].id,
+        patient_id: user.id,
         first_name: profileInfo.first_name,
         last_name: profileInfo.last_name,
         age: profileInfo.age,
@@ -47,7 +49,7 @@ export default function PatientProfile({ user, isPatientHighRisk }) {
         const new_profile = response.data.profile;
         setPatientProfile(new_profile);
         setIsFormFilled(null);
-        history.push(`/patients/${user[0].id}/appointments`);
+        history.push(`/patients/${user.id}/appointments`);
       })
       .catch(function (error) {
         setIsFormFilled(null);
@@ -80,20 +82,20 @@ export default function PatientProfile({ user, isPatientHighRisk }) {
     setIsFormFilled(null);
   };
 
-  const checkPatientRisk = () => {
-    if (
-      profileInfo.age === "1" ||
-      profileInfo.has_chronic_conditions === "true" ||
-      profileInfo.is_health_care_worker === "true" ||
-      profileInfo.is_staff_senior_care === "true"
-    ) {
-      console.log("risk ", true);
-      isPatientHighRisk(true);
-    } else {
-      console.log("risk ", false);
-      isPatientHighRisk(false);
-    }
-  };
+  // const checkPatientRisk = () => {
+  //   if (
+  //     profileInfo.age === "1" ||
+  //     profileInfo.has_chronic_conditions === "true" ||
+  //     profileInfo.is_health_care_worker === "true" ||
+  //     profileInfo.is_staff_senior_care === "true"
+  //   ) {
+  //     console.log("risk ", true);
+  //     isPatientHighRisk(true);
+  //   } else {
+  //     console.log("risk ", false);
+  //     isPatientHighRisk(false);
+  //   }
+  // };
 
   useEffect(() => console.log(profileInfo), [profileInfo]);
 

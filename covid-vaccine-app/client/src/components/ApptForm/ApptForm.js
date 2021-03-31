@@ -2,6 +2,11 @@ import { useState, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 
+import "bootstrap/dist/css/bootstrap.css";
+import Form from "react-bootstrap/Form";
+
+import "./ApptForm.css";
+
 export default function ApptForm(props) {
   const {
     user,
@@ -15,18 +20,36 @@ export default function ApptForm(props) {
     isActionUpdate,
     getIsApptUpdated,
     getIsActionUpdate,
-    isHighRisk,
   } = props;
 
+  console.log(user);
   const [bookApptForm, setBookApptForm] = useState({
     date: "",
     time: "",
     nurse_id: "",
-    is_high_risk: isHighRisk,
+    is_high_risk: "",
   });
 
-  useEffect(() => console.log(user), [user]);
   const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
+
+  useEffect(() => {
+    axios.get(`/api/patients/${user.id}`).then((response) => {
+      const profile = response.data.profile[0];
+      console.log(profile);
+      if (
+        profile.age === "1" ||
+        profile.has_chronic_conditions === "true" ||
+        profile.is_health_care_worker === "true" ||
+        profile.is_staff_senior_care === "true"
+      ) {
+        console.log("risk ", true);
+        setBookApptForm({ ...bookApptForm, is_high_risk: true });
+      } else {
+        console.log("risk ", false);
+        setBookApptForm({ ...bookApptForm, is_high_risk: false });
+      }
+    });
+  }, []);
 
   const submitHandler = (event) => {
     event.preventDefault();
@@ -38,7 +61,8 @@ export default function ApptForm(props) {
     } else {
       isNurseAvailable(bookApptForm.nurse_id, () => {
         console.log(user);
-        bookAppt(user[0].id);
+        // bookAppt(user[0].id);
+        bookAppt(user.id);
       });
     }
   };
@@ -124,65 +148,88 @@ export default function ApptForm(props) {
     getIsApptBooked(null);
   };
 
+  useEffect(() => console.log(bookApptForm), [bookApptForm]);
+
   return (
-    <form onSubmit={submitHandler}>
-      <label htmlFor="appt-time">Date: </label>
-      <input
-        type="date"
-        value={bookApptForm.date}
-        onChange={(event) => {
-          setBookApptForm({
-            ...bookApptForm,
-            date: event.target.value,
-          });
-          clearStatus();
-        }}
-      />
+    <Form onSubmit={submitHandler}>
+      <div>
+        <label htmlFor="appt-time" className="mr-3 mb-3">
+          Date:{" "}
+        </label>
+        <input
+          type="date"
+          value={bookApptForm.date}
+          className="mb-3"
+          onChange={(event) => {
+            setBookApptForm({
+              ...bookApptForm,
+              date: event.target.value,
+            });
+            clearStatus();
+          }}
+        />
+      </div>
 
-      <label htmlFor="appt-time">Time: </label>
-      <select
-        htmlFor="time"
-        value={bookApptForm.time}
-        onChange={(event) => {
-          setBookApptForm({
-            ...bookApptForm,
-            time: event.target.value,
-          });
-          clearStatus();
-        }}
-      >
-        <option value="placeholder">Select an option</option>
-        <option value="10:00:00">10:00am</option>
-        <option value="11:00:00">11:00am</option>
-        <option value="13:00:00">1:00pm</option>
-        <option value="14:00:00">2:00pm</option>
-        <option value="15:00:00">3:00pm</option>
-        <option value="16:00:00">4:00pm</option>
-      </select>
+      <div>
+        <label htmlFor="appt-time" className="mt-3 mb-2">
+          Time:{" "}
+        </label>
+        <Form.Control
+          as="select"
+          value={bookApptForm.time}
+          className="mb-3"
+          onChange={(event) => {
+            setBookApptForm({
+              ...bookApptForm,
+              time: event.target.value,
+            });
+            clearStatus();
+          }}
+        >
+          <option value="placeholder">Select an option</option>
+          <option value="10:00:00">10:00am</option>
+          <option value="11:00:00">11:00am</option>
+          <option value="13:00:00">1:00pm</option>
+          <option value="14:00:00">2:00pm</option>
+          <option value="15:00:00">3:00pm</option>
+          <option value="16:00:00">4:00pm</option>
+        </Form.Control>
+      </div>
 
-      <select
-        htmlFor="nurse"
-        value={bookApptForm.nurse_id}
-        onChange={(event) => {
-          setBookApptForm({
-            ...bookApptForm,
-            nurse_id: event.target.value,
-          });
-          clearStatus();
-        }}
-      >
-        Nurse:
-        <option value="placeholder">Select an option</option>
-        {nurses.map((nurse) => (
-          <option key={nurse.id} value={nurse.id}>
-            {nurse.first_name} {nurse.last_name}
-          </option>
-        ))}
-      </select>
-      <label htmlFor="high-risk">High Risk: </label>
-      <span>{isHighRisk === true ? "Yes" : "No"}</span>
+      <div>
+        <label htmlFor="nurse" className="mt-3 mb-2">
+          Nurse:{" "}
+        </label>
+        <Form.Control
+          as="select"
+          className="mb-3"
+          value={bookApptForm.nurse_id}
+          onChange={(event) => {
+            setBookApptForm({
+              ...bookApptForm,
+              nurse_id: event.target.value,
+            });
+            clearStatus();
+          }}
+        >
+          <option value="placeholder">Select an option</option>
+          {nurses.map((nurse) => (
+            <option key={nurse.id} value={nurse.id}>
+              {nurse.first_name} {nurse.last_name}
+            </option>
+          ))}
+        </Form.Control>
+        <div>
+          <label htmlFor="high-risk" className="mr-3 mt-3 mb-5">
+            High Risk:{" "}
+          </label>
+          <span className="mt-3 mb-5 patient-risk">
+            {bookApptForm.is_high_risk === true ? "Yes" : "No"}
+          </span>
+        </div>
+      </div>
 
       <input type="submit" value={action} />
-    </form>
+    </Form>
   );
 }
