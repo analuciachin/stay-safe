@@ -79,7 +79,7 @@ export default function Login({
         <Form onSubmit={submitHandler} className="text-center">
           {userSelected === "Patient" ? (
             <div>
-              <label htmlFor="email" className="mt-5 mb-5">
+              <label htmlFor="email" className="mt-2 mb-5">
                 Email
               </label>
               <input
