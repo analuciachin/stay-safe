@@ -56,12 +56,7 @@ const App = () => {
           <Route
             exact
             path="/patients"
-            render={() => (
-              <PatientProfile
-                user={state.user}
-                isPatientHighRisk={isPatientHighRisk}
-              />
-            )}
+            render={() => <PatientProfile user={state.user} />}
           />
 
           <Route

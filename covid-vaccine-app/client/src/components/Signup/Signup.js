@@ -34,7 +34,7 @@ export default function Signup({ getUserLogged }) {
         password: signupInfo.password,
       })
       .then(function (response) {
-        const new_patient = response.data.new_patient;
+        const new_patient = response.data.new_patient[0];
         console.log("new patient ", new_patient);
         getUserLogged(new_patient);
 
