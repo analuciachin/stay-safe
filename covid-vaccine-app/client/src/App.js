@@ -9,6 +9,7 @@ import PatientAppt from "./components/PatientAppt/PatientAppt";
 import Signup from "./components/Signup/Signup";
 import PatientProfile from "./components/PatientProfile/PatientProfile";
 import ApptSuccess from "./components/ApptSuccess/ApptSuccess";
+import ApptList from "./components/ApptList/ApptList";
 
 const App = () => {
   const [state, setState] = useState({
@@ -85,6 +86,11 @@ const App = () => {
                 message="Your appointment was booked  successfully!"
               />
             )}
+          />
+
+          <Route
+            path="/nurses/:id/appointments"
+            render={() => <ApptList user={state.user} />}
           />
         </Switch>
       </Router>

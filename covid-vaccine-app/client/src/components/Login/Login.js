@@ -41,7 +41,11 @@ export default function Login({
         console.log("user ", user);
         getUserLogged(user);
 
-        history.push(`/patients/${user.id}/appointments`);
+        if (user.type === "patient") {
+          history.push(`/patients/${user.id}/appointments`);
+        } else {
+          history.push(`nurses/${user.id}/appointments`);
+        }
       })
       .catch(function (error) {
         if (error.response && error.response.data) {
