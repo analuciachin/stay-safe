@@ -34,7 +34,19 @@ export default function ApptList({ user }) {
   return (
     <>
       <ul>
-        <li>Appts</li>
+        {appointments.map((appt) => (
+          <li>
+            <div>
+              {appt.first_name} {appt.last_name}
+            </div>
+            <div>Date: {appt.appt_date.substring(0, 10)}</div>
+            <div>Time: {appt.appt_date.substring(11, 19)}</div>
+            <div>
+              Is a high priority appointment?{" "}
+              {appt.is_high_priority ? "Yes" : "No"}
+            </div>
+          </li>
+        ))}
       </ul>
     </>
   );
