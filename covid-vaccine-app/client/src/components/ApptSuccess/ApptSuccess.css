@@ -1,5 +1,5 @@
 button {
-  width: 30%;
+  width: 400px;
   padding: 12px 20px;
   margin: 4px 0;
   box-sizing: border-box;
@@ -7,4 +7,12 @@ button {
   background-color: #ff5c33;
   border-color: #ff5c33;
   font-size: 20px;
+  letter-spacing: 1px;
+  word-spacing: 2px;
+}
+
+.success {
+  color: #248f24;
+  letter-spacing: 1px;
+  word-spacing: 2px;
 }

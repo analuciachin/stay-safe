@@ -8,6 +8,7 @@ import UserOptions from "./components/UserOptions/UserOptions";
 import PatientAppt from "./components/PatientAppt/PatientAppt";
 import Signup from "./components/Signup/Signup";
 import PatientProfile from "./components/PatientProfile/PatientProfile";
+import ApptSuccess from "./components/ApptSuccess/ApptSuccess";
 
 const App = () => {
   const [state, setState] = useState({
@@ -68,7 +69,12 @@ const App = () => {
           />
           <Route
             path="/patients/:id/appointments/updated"
-            render={() => <h2>Your appointment was updated successfuly!</h2>}
+            render={() => (
+              <ApptSuccess
+                user={state.user}
+                message="Your appointment was updated successfully!"
+              />
+            )}
           />
         </Switch>
       </Router>
