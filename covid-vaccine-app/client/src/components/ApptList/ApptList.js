@@ -6,9 +6,11 @@ export default function ApptList({ user }) {
   const [appointments, setAppointments] = useState(null);
 
   useEffect(() => {
-    axios
-      .get(`/api/nurses/${user.id}/appointments`)
-      .then((response) => console.log(response));
+    axios.get(`/api/nurses/${user.id}/appointments`).then((response) => {
+      console.log(response.data);
+      const appts = response.data;
+      setAppointments(appts);
+    });
   }, []);
 
   return (
