@@ -15,8 +15,11 @@ module.exports = (db) => {
 
   router.get("/:id/appointments", (req, res) => {
     db.query(
-      `SELECT *
-        FROM appointments WHERE nurse_id = $1`,
+      `SELECT appointments.*, profiles.first_name, profiles.last_name
+        FROM appointments 
+        LEFT JOIN patients ON appointments.patient_id = patients.id
+        LEFT JOIN profiles ON profiles.patient_id = patients.id
+        WHERE nurse_id = $1`,
       [req.params.id]
     )
       .then((data) => {
