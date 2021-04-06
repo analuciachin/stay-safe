@@ -80,6 +80,7 @@ export default function ApptForm(props) {
       .then((response) => {
         if (response.data.appointment.length > 0) {
           getIsApptBooked(true);
+          history.push(`/patients/${user.id}/appointments/booked`);
         }
       })
       .catch((error) => console.log(error));

@@ -76,6 +76,16 @@ const App = () => {
               />
             )}
           />
+
+          <Route
+            path="/patients/:id/appointments/booked"
+            render={() => (
+              <ApptSuccess
+                user={state.user}
+                message="Your appointment was booked  successfully!"
+              />
+            )}
+          />
         </Switch>
       </Router>
     </Container>
