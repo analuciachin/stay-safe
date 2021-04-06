@@ -27,6 +27,7 @@ export default function PatientAppt({ user, nurses }) {
   };
 
   useEffect(() => {
+    console.log("user", user);
     if (user.type === "patient") {
       axios
         .get(`/api/patients/${user.id}/appointments`)
