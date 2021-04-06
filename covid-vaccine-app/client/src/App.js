@@ -20,10 +20,6 @@ const App = () => {
     setState({ ...state, user: userLogged });
   };
 
-  const isPatientHighRisk = (risk) => {
-    setState({ ...state, isHighRisk: risk });
-  };
-
   useEffect(() => {
     axios.get(`/api/nurses`).then((response) => {
       console.log(response.data.nurses);
@@ -60,6 +56,7 @@ const App = () => {
           />
 
           <Route
+            exact
             path="/patients/:id/appointments"
             render={() => (
               <PatientAppt
@@ -68,6 +65,10 @@ const App = () => {
                 isHighRisk={state.isHighRisk}
               />
             )}
+          />
+          <Route
+            path="/patients/:id/appointments/updated"
+            render={() => <h2>Your appointment was updated successfuly!</h2>}
           />
         </Switch>
       </Router>
