@@ -32,6 +32,8 @@ export default function ApptForm(props) {
 
   const [isApptTimeAvailable, setIsApptTimeAvailable] = useState(true);
 
+  let history = useHistory();
+
   useEffect(() => {
     axios.get(`/api/patients/${user.id}`).then((response) => {
       const profile = response.data.profile[0];
@@ -78,6 +80,7 @@ export default function ApptForm(props) {
       .then((response) => {
         if (response.data.appointment.length > 0) {
           getIsApptBooked(true);
+          history.push(`/patients/${user.id}/appointments/booked`);
         }
       })
       .catch((error) => console.log(error));
@@ -137,6 +140,7 @@ export default function ApptForm(props) {
         if (response.status === 200) {
           getIsApptUpdated(true);
           getIsActionUpdate(false);
+          history.push(`/patients/${user.id}/appointments/updated`);
         }
       })
       .catch((error) => console.log(error));

@@ -18,6 +18,7 @@ input[type="submit"] {
   background-color: #ff5c33;
   border-color: #ff5c33;
   font-size: 20px;
+  letter-spacing: 1px;
 }
 
 .signup {

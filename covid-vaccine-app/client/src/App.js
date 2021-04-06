@@ -8,6 +8,7 @@ import UserOptions from "./components/UserOptions/UserOptions";
 import PatientAppt from "./components/PatientAppt/PatientAppt";
 import Signup from "./components/Signup/Signup";
 import PatientProfile from "./components/PatientProfile/PatientProfile";
+import ApptSuccess from "./components/ApptSuccess/ApptSuccess";
 
 const App = () => {
   const [state, setState] = useState({
@@ -18,10 +19,6 @@ const App = () => {
 
   const getUserLogged = (userLogged) => {
     setState({ ...state, user: userLogged });
-  };
-
-  const isPatientHighRisk = (risk) => {
-    setState({ ...state, isHighRisk: risk });
   };
 
   useEffect(() => {
@@ -60,12 +57,32 @@ const App = () => {
           />
 
           <Route
+            exact
             path="/patients/:id/appointments"
             render={() => (
               <PatientAppt
                 user={state.user}
                 nurses={state.nurses}
                 isHighRisk={state.isHighRisk}
+              />
+            )}
+          />
+          <Route
+            path="/patients/:id/appointments/updated"
+            render={() => (
+              <ApptSuccess
+                user={state.user}
+                message="Your appointment was updated successfully!"
+              />
+            )}
+          />
+
+          <Route
+            path="/patients/:id/appointments/booked"
+            render={() => (
+              <ApptSuccess
+                user={state.user}
+                message="Your appointment was booked  successfully!"
               />
             )}
           />

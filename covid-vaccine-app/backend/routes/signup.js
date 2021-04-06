@@ -23,8 +23,10 @@ module.exports = (db) => {
               [patient_email, password]
             )
             .then((data) => {
-              //console.log("data", data);
-              const new_patient = data.rows;
+              const new_patient = {};
+              new_patient.id = data.rows[0].id;
+              new_patient.email = data.rows[0].email;
+              new_patient.type = "patient";
               res.json({ new_patient });
             })
             .catch((err) => {
