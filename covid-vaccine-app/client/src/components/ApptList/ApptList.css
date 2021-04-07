@@ -1,0 +1,10 @@
+li.appt-item div {
+  font-size: 22px;
+  letter-spacing: 1px;
+  word-spacing: 2px;
+  margin-top: 5px;
+}
+
+li.appt-item div:first-child {
+  margin-top: 40px;
+}

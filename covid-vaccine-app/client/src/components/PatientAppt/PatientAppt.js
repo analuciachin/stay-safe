@@ -97,7 +97,7 @@ export default function PatientAppt({ user, nurses }) {
       <Row className="align-items-center">
         <Col>
           <div className="img-container">
-            <img src={booked} alt="appt-booked" className="appt-booked-img" />
+            <img src={booked} alt="appt-booked" className="appt-img" />
           </div>
           <p className="text-center title">Stay Safe</p>
         </Col>

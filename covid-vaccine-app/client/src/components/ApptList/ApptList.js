@@ -1,6 +1,13 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
-//import "./Login.css";
+import { useState, useEffect } from "react";
+
+import "bootstrap/dist/css/bootstrap.css";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import nurse from "../../images/nurse_doctor.svg";
+
+import "./ApptList.css";
 
 export default function ApptList({ user }) {
   const [appointments, setAppointments] = useState(null);
@@ -25,40 +32,50 @@ export default function ApptList({ user }) {
       .then((response) => {
         console.log(response.data.appointments);
         const appts = response.data.appointments;
-        //setAppointments(appts);
         console.log(appts);
         return appts;
       })
       .then((appts) => {
-        console.log("here", appts);
-        const sortedAppts = sortByDateTime(appts);
         setAppointments(sortByDateTime(appts));
       });
   }, []);
 
-  useEffect(() => {
-    console.log(appointments);
-    //sortByDateTime();
-  }, [appointments]);
+  useEffect(() => console.log(appointments), [appointments]);
 
   return (
     <>
-      <ul>
-        {appointments &&
-          appointments.map((appt) => (
-            <li key={appt.id}>
-              <div>
-                {appt.first_name} {appt.last_name}
-              </div>
-              <div>Date: {appt.appt_date.substring(0, 10)}</div>
-              <div>Time: {appt.appt_date.substring(11, 19)}</div>
-              <div>
-                Is a high priority appointment?{" "}
-                {appt.is_high_priority ? "Yes" : "No"}
-              </div>
-            </li>
-          ))}
-      </ul>
+      <Row className="align-items-center">
+        <Col>
+          <div className="img-container">
+            <img src={nurse} alt="nurse-doctor" className="appt-img" />
+          </div>
+          <p className="text-center title">Stay Safe</p>
+        </Col>
+        <Col>
+          {appointments && appointments.length === 0 && (
+            <h1 className="ml-5 mt-5">No appointments booked</h1>
+          )}
+          {appointments && appointments.length > 0 && (
+            <h1 className="ml-5 mt-5">List of appointments</h1>
+          )}
+          <ul className="appt-list ml-5">
+            {appointments &&
+              appointments.map((appt) => (
+                <li key={appt.id} className="appt-item">
+                  <div>
+                    {appt.first_name} {appt.last_name}
+                  </div>
+                  <div>Date: {appt.appt_date.substring(0, 10)}</div>
+                  <div>Time: {appt.appt_date.substring(11, 19)}</div>
+                  <div>
+                    Is a high priority appointment?{" "}
+                    {appt.is_high_priority ? "Yes" : "No"}
+                  </div>
+                </li>
+              ))}
+          </ul>
+        </Col>
+      </Row>
     </>
   );
 }
