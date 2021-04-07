@@ -40,6 +40,8 @@ export default function ApptList({ user }) {
       });
   }, []);
 
+  useEffect(() => console.log(appointments), [appointments]);
+
   return (
     <>
       <Row className="align-items-center">
@@ -50,7 +52,12 @@ export default function ApptList({ user }) {
           <p className="text-center title">Stay Safe</p>
         </Col>
         <Col>
-          <h1 className="ml-5 mt-5">List of appointments</h1>
+          {appointments && appointments.length === 0 && (
+            <h1 className="ml-5 mt-5">No appointments booked</h1>
+          )}
+          {appointments && appointments.length > 0 && (
+            <h1 className="ml-5 mt-5">List of appointments</h1>
+          )}
           <ul className="appt-list ml-5">
             {appointments &&
               appointments.map((appt) => (
