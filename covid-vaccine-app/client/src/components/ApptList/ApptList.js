@@ -1,6 +1,12 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
-//import "./Login.css";
+import { useState, useEffect } from "react";
+
+import "bootstrap/dist/css/bootstrap.css";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+
+import "./ApptList.css";
 
 export default function ApptList({ user }) {
   const [appointments, setAppointments] = useState(null);
@@ -35,22 +41,31 @@ export default function ApptList({ user }) {
 
   return (
     <>
-      <ul>
-        {appointments &&
-          appointments.map((appt) => (
-            <li key={appt.id}>
-              <div>
-                {appt.first_name} {appt.last_name}
-              </div>
-              <div>Date: {appt.appt_date.substring(0, 10)}</div>
-              <div>Time: {appt.appt_date.substring(11, 19)}</div>
-              <div>
-                Is a high priority appointment?{" "}
-                {appt.is_high_priority ? "Yes" : "No"}
-              </div>
-            </li>
-          ))}
-      </ul>
+      <Row>
+        <Col md={{ span: 6, offset: 3 }}>
+          <h1 className="mt-5">List of appointments</h1>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={{ span: 6, offset: 3 }}>
+          <ul className="appt-list">
+            {appointments &&
+              appointments.map((appt) => (
+                <li key={appt.id} className="appt-item">
+                  <div>
+                    {appt.first_name} {appt.last_name}
+                  </div>
+                  <div>Date: {appt.appt_date.substring(0, 10)}</div>
+                  <div>Time: {appt.appt_date.substring(11, 19)}</div>
+                  <div>
+                    Is a high priority appointment?{" "}
+                    {appt.is_high_priority ? "Yes" : "No"}
+                  </div>
+                </li>
+              ))}
+          </ul>
+        </Col>
+      </Row>
     </>
   );
 }
