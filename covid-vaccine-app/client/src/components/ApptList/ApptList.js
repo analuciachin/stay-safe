@@ -25,21 +25,13 @@ export default function ApptList({ user }) {
       .then((response) => {
         console.log(response.data.appointments);
         const appts = response.data.appointments;
-        //setAppointments(appts);
         console.log(appts);
         return appts;
       })
       .then((appts) => {
-        console.log("here", appts);
-        const sortedAppts = sortByDateTime(appts);
         setAppointments(sortByDateTime(appts));
       });
   }, []);
-
-  useEffect(() => {
-    console.log(appointments);
-    //sortByDateTime();
-  }, [appointments]);
 
   return (
     <>
