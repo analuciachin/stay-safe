@@ -5,6 +5,7 @@ import "bootstrap/dist/css/bootstrap.css";
 
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import nurse from "../../images/nurse_doctor.svg";
 
 import "./ApptList.css";
 
@@ -41,14 +42,16 @@ export default function ApptList({ user }) {
 
   return (
     <>
-      <Row>
-        <Col md={{ span: 6, offset: 3 }}>
-          <h1 className="mt-5">List of appointments</h1>
+      <Row className="align-items-center">
+        <Col>
+          <div className="img-container">
+            <img src={nurse} alt="nurse-doctor" className="appt-img" />
+          </div>
+          <p className="text-center title">Stay Safe</p>
         </Col>
-      </Row>
-      <Row>
-        <Col md={{ span: 6, offset: 3 }}>
-          <ul className="appt-list">
+        <Col>
+          <h1 className="ml-5 mt-5">List of appointments</h1>
+          <ul className="appt-list ml-5">
             {appointments &&
               appointments.map((appt) => (
                 <li key={appt.id} className="appt-item">
