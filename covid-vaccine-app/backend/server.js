@@ -55,6 +55,7 @@ const patientsRoutes = require("./routes/patients");
 const nursesRoutes = require("./routes/nurses");
 const loginRoute = require("./routes/login");
 const signupRoute = require("./routes/signup");
+const logoutRoute = require("./routes/logout");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
@@ -64,6 +65,7 @@ app.use("/api/patients", patientsRoutes(db));
 app.use("/api/nurses", nursesRoutes(db));
 app.use("/api/login", loginRoute(db));
 app.use("/api/signup", signupRoute(db));
+app.use("/api/logout", logoutRoute(db));
 
 // Note: mount other resources here, using the same pattern above
 
