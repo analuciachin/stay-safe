@@ -27,6 +27,7 @@ module.exports = (db) => {
               new_patient.id = data.rows[0].id;
               new_patient.email = data.rows[0].email;
               new_patient.type = "patient";
+              req.session.user_id = new_patient.id;
               res.json({ new_patient });
             })
             .catch((err) => {
