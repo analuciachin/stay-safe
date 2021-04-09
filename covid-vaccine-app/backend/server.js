@@ -7,6 +7,7 @@ const ENV = process.env.ENV || "development";
 const express = require("express");
 const bodyParser = require("body-parser");
 const sass = require("node-sass-middleware");
+const cookieSession = require("cookie-session");
 const app = express();
 const morgan = require("morgan");
 
@@ -33,6 +34,17 @@ app.use(
     outputStyle: "expanded",
   })
 );
+
+app.use(
+  cookieSession({
+    name: "session",
+    keys: [
+      "b6d0e7eb-8c4b-4ae4-8460-fd3a08733dcb",
+      "1fb2d767-ffbf-41a6-98dd-86ac2da9392e",
+    ],
+  })
+);
+
 app.use(express.static("public"));
 
 // Separated Routes for each Resource
