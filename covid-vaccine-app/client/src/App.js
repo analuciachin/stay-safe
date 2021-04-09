@@ -10,6 +10,7 @@ import Signup from "./components/Signup/Signup";
 import PatientProfile from "./components/PatientProfile/PatientProfile";
 import ApptSuccess from "./components/ApptSuccess/ApptSuccess";
 import ApptList from "./components/ApptList/ApptList";
+import Nav from "./components/Nav/Nav";
 
 const App = () => {
   const [state, setState] = useState({
@@ -39,58 +40,77 @@ const App = () => {
           <Route
             exact
             path="/"
+            render={() => <UserOptions getUserLogged={getUserLogged} />}
+          />
+
+          <Route
+            path="/signup"
             render={() => (
               <div>
-                <UserOptions getUserLogged={getUserLogged} />
+                <Signup getUserLogged={getUserLogged} />
               </div>
             )}
           />
 
           <Route
-            path="/signup"
-            render={() => <Signup getUserLogged={getUserLogged} />}
-          />
-
-          <Route
             exact
             path="/patients"
-            render={() => <PatientProfile user={state.user} />}
+            render={() => (
+              <div>
+                <Nav />
+                <PatientProfile user={state.user} />
+              </div>
+            )}
           />
 
           <Route
             exact
             path="/patients/:id/appointments"
             render={() => (
-              <PatientAppt
-                user={state.user}
-                nurses={state.nurses}
-                isHighRisk={state.isHighRisk}
-              />
+              <>
+                <Nav />
+                <PatientAppt
+                  user={state.user}
+                  nurses={state.nurses}
+                  isHighRisk={state.isHighRisk}
+                />
+              </>
             )}
           />
           <Route
             path="/patients/:id/appointments/updated"
             render={() => (
-              <ApptSuccess
-                user={state.user}
-                message="Your appointment was updated successfully!"
-              />
+              <>
+                <Nav />
+                <ApptSuccess
+                  user={state.user}
+                  message="Your appointment was updated successfully!"
+                />
+              </>
             )}
           />
 
           <Route
             path="/patients/:id/appointments/booked"
             render={() => (
-              <ApptSuccess
-                user={state.user}
-                message="Your appointment was booked  successfully!"
-              />
+              <>
+                <Nav />
+                <ApptSuccess
+                  user={state.user}
+                  message="Your appointment was booked  successfully!"
+                />
+              </>
             )}
           />
 
           <Route
             path="/nurses/:id/appointments"
-            render={() => <ApptList user={state.user} />}
+            render={() => (
+              <>
+                <Nav />
+                <ApptList user={state.user} />
+              </>
+            )}
           />
         </Switch>
       </Router>

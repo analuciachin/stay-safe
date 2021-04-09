@@ -24,6 +24,7 @@ module.exports = (db) => {
               user.id = data.rows[0].id;
               user.email = data.rows[0].email;
               user.type = "patient";
+              req.session.user_id = user.id;
               res.json({ user });
             } else {
               res.status(401).send({ message: "Invalid password" });
@@ -47,7 +48,7 @@ module.exports = (db) => {
               user.id = data.rows[0].id;
               user.username = data.rows[0].username;
               user.type = "nurse";
-              console.log(user);
+              req.session.user_id = user.id;
               res.json({ user });
             } else {
               res.status(401).send({ message: "Invalid password" });
