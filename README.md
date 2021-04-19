@@ -7,13 +7,13 @@ Stay Safe was built with 2 types of user in mind: Patient and Nurse. If the user
 
 The project uses React for the front-end and NodeJS, Express and PostgreSQL for the backend.
 
-# Front-end
+### Front-end
 
 1. run **git clone https://github.com/analuciachin/stay-safe.git** to clone this repository
 2. go into the _client_ folder and install all modules listed as dependencies in package.json by running the command **npm install**
 3. run the app in the development mode with npm run start A new browser window should automatically open displaying the app. If it does not, navigate to http://localhost:3000/ in your browser.
 
-# Back-end
+### Back-end
 
 1. create a database in psql (database: covid_vaccine, username: labber, password: labber)
 2. go into the _backend_ folder and install all modules listed as dependencies in package.json by running the command **npm i**
